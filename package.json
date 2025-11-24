@@ -1,0 +1,39 @@
+{
+  "name": "adr",
+  "version": "1.0.0",
+  "description": "Electronic Directory of Hazardous Materials.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbbnova/ADR.git"
+  },
+  "keywords": [
+    "ADR",
+    "Directory",
+    "Hazard",
+    "Transport",
+    "Response",
+    "Safety"
+  ],
+  "author": "Vasil Vasilev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bbbnova/ADR/issues"
+  },
+  "homepage": "https://github.com/bbbnova/ADR#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-layout": "^0.1.0",
+    "mongodb": "^7.0.0",
+    "mongoose": "^9.0.0"
+  }
+}
