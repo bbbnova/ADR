@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Home' });
+    res.render('index', { title: 'ADR app' });
 });
 
 // 404 handler
