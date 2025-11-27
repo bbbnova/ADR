@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
+const homeRouter = require('./routers/html/homeRouter');
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -14,12 +15,10 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(expressLayouts);
+app.use(expressLayouts);
 
 // Routes
-app.get('/', (req, res) => {
-    res.render('addInstruction', { title: 'ADR app' });
-});
+app.use('/', homeRouter);
 
 // 404 handler
 app.use((req, res) => {
