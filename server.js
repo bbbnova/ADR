@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const app = express();
 const homeRouter = require('./routers/html/homeRouter');
+const apiRouter = require('./routers/api/addInstructionRouter');
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,10 +20,11 @@ app.use(expressLayouts);
 
 // Routes
 app.use('/', homeRouter);
+app.use('/api/', apiRouter);
 
 // 404 handler
 app.use((req, res) => {
-    res.status(404).render('404', { url: req.originalUrl });
+    res.status(404).render('404', {title: 'ADR app', url: req.originalUrl, layout: 'layouts/main' });
 });
 
 // Error handler
@@ -30,8 +32,10 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(err.status || 500);
     res.render('error', {
+        title: 'ADR app', 
         message: err.message,
-        error: process.env.NODE_ENV === 'development' ? err : {}
+        error: process.env.NODE_ENV === 'development' ? err : {},
+        layout: 'layouts/main'
     });
 });
 

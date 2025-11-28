@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/addInstruction HTTP/1.1
+content-type: application/json
+
+{
+    "title": "sample",
+    "content": "hello world sample content",
+    "description": "this is sample description",
+    "number": 1
+}

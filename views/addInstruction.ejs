@@ -34,10 +34,15 @@
         const content = quill.root.innerHTML;
 
         try {
-            const response = await fetch('/api/instructions', {
+            const response = await fetch('/api/addInstruction', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, content })
+                body: JSON.stringify({ 
+                    number: 2,
+                    title: title, 
+                    description: 'New sample description',
+                    content: content 
+                })
             });
             
             if (response.ok) {

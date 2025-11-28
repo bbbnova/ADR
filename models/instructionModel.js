@@ -2,16 +2,10 @@ const mongoose = require('mongoose');
 
 const instructionSchema = new mongoose.Schema({
     instructionId: String,
-    namber: Number,
+    number: Number,
+    title: String,
     description: String,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    modifiedAt: {
-      type: Date,
-      default: Date.now
-    },
+    content: String,
     version: Number
   });
 
