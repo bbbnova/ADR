@@ -10,6 +10,19 @@ const getHomePage = async (req, res) => {
     }
 }
 
+const getListInstructionsPage = async (req, res) => {
+    try {
+        let instructions = await Instruction.find().sort({ number: 1 });
+        if (!instructions) {
+            instructions = [];
+        }
+        console.log(instructions);
+        res.render('listInstructions', { title: 'ADR app', instructions: instructions, layout: 'layouts/main' });
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
+}
+
 const getAddInstructionPage = async (req, res) => {
     try {
         res.render('addInstruction', { 
@@ -50,6 +63,7 @@ const getShowInstructionPage = async (req, res) => {
 
 module.exports = {
     getHomePage,
+    getListInstructionsPage,
     getAddInstructionPage,
     getEditInstructionPage,
     getShowInstructionPage

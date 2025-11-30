@@ -33,3 +33,22 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.instructionCard {
+    background: #ffffff;
+    border: 1px solid #ffc46c;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.instructionCard:hover {
+    background-color: #ffd9ad;
+} 
