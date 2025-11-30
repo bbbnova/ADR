@@ -9,5 +9,7 @@ const instructionSchema = new mongoose.Schema({
     version: Number
   });
 
-const Instruction = mongoose.model('Instruction', instructionSchema);
+const Instruction = 
+  mongoose.model('Instruction', instructionSchema);
+
 module.exports = Instruction;

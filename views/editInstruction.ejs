@@ -64,17 +64,18 @@
         const number = document.getElementById('number').value;
         const title = document.getElementById('title').value;
         const description = document.getElementById('description').value;
-        // const content = quill.getSemanticHTML();
+        const _id = instruction._id;
+        
+        
         let content = JSON.stringify(quill.getContents());
-        
-        
         let contentBase64 = btoa(encodeURIComponent(content));
 
         try {
-            const response = await fetch('/api/addInstruction', {
+            const response = await fetch('/api/updateInstruction', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
+                    _id: _id,
                     number: number,
                     title: title, 
                     description: description,
@@ -93,6 +94,18 @@
         }
 
     });
+
+    let instruction = '<%- JSON.stringify(instruction) %>';
+    instruction = JSON.parse(instruction);
+    document.getElementById('number').value = instruction.number;
+    document.getElementById('title').value = instruction.title;
+    document.getElementById('description').value = instruction.description;
+
+    let c = '<%-instruction.content%>';
+    let utfC = decodeURIComponent(atob(c));
+    const content = JSON.parse(utfC); 
+    quill.setContents(content); 
+
 
     function arrayBufferToBase64( buffer ) {
         var binary = '';

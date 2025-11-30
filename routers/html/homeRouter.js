@@ -5,5 +5,7 @@ const htmlHomeControler = require('../../controlers/htmlHomeControler')
 
 router.get('/', htmlHomeControler.getHomePage);
 router.get('/getAddInstructionPage', htmlHomeControler.getAddInstructionPage);
+router.get('/getEditInstructionPage/:id', htmlHomeControler.getEditInstructionPage);
+router.get('/getShowInstructionPage/:id', htmlHomeControler.getShowInstructionPage);
 
 module.exports = router;
