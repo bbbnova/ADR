@@ -5,7 +5,7 @@
             <label for="number">Number</label>
             <input type="number" id="number" name="number" required>
         </div>
-
+        
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" id="title" name="title" required>
@@ -18,56 +18,26 @@
 
         <div class="form-group">
             <label for="editor">Content</label>
-            <div id="editor"></div>
+            <%- include("./partials/editor.ejs")  %>
         </div>
 
         <button type="submit">Save Instruction</button>
     </form>
-</div>
+</div> 
 
 <script>
-    const quill = new Quill('#editor', {
-        theme: 'snow',
-        modules: {
-            toolbar: 
-            [
-                ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                ['blockquote', 'code-block'],
-                ['link', 'image', 'video', 'formula'],
-                
-                // [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
-                [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-                [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-                [{ 'direction': 'rtl' }],                         // text direction
-
-                [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                [{ 'font': [] }],
-                [{ 'align': [] }],
-
-                ['clean']                                         // remove formatting button
-            ]
-            // [
-            //     ['bold', 'italic', 'underline'],
-            //     ['image', 'code-block'],
-            //     [{ 'list': 'ordered'}, { 'list': 'bullet' }]
-            // ]
-        }
-    });
+    let editor;
+    window.onload = function() {
+        let domEditableElement = document.querySelector( '.ck-editor__editable_inline' ); 
+        editor = domEditableElement.ckeditorInstance;
+    };
 
     document.getElementById('instructionForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
+        e.preventDefault();        
         const number = document.getElementById('number').value;
         const title = document.getElementById('title').value;
         const description = document.getElementById('description').value;
-        // const content = quill.getSemanticHTML();
-        let content = JSON.stringify(quill.getContents());
-        
-        
+        let content = editor.getData();
         let contentBase64 = btoa(encodeURIComponent(content));
 
         try {
@@ -83,8 +53,6 @@
             });
             
             if (response.ok) {
-                // document.getElementById('instructionForm').reset();
-                // quill.setContents(JSON.parse(content));
                 let instruction = await response.json();
                 window.location.href = `/getShowInstructionPage/${instruction._id}`;
             }
@@ -92,25 +60,5 @@
             console.error('Error:', error);
         }
 
-    });
-
-    function arrayBufferToBase64( buffer ) {
-        var binary = '';
-        var bytes = new Uint8Array( buffer );
-        var len = bytes.byteLength;
-        for (var i = 0; i < len; i++) {
-            binary += String.fromCharCode( bytes[ i ] );
-        }
-        return window.btoa( binary );
-    }
-
-    function base64ToArrayBuffer(base64) {
-        var binary_string =  window.atob(base64);
-        var len = binary_string.length;
-        var bytes = new Uint8Array( len );
-        for (var i = 0; i < len; i++)        {
-            bytes[i] = binary_string.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
+    }); 
 </script>

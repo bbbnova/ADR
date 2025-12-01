@@ -1,43 +1,14 @@
-<div id="editor" style="height: auto;"></div>
+<div class=".editor-container" style="width: 795px; margin: 0 auto;">
+    <h3>Номер: <%= instruction.number %></h3>
+    <h3>Заглавие: <%= instruction.title %></h2>
+    <h3>Описание: <%= instruction.description %></h3>
+</div>
 
+<%- include("./partials/content.ejs")  %>
 
 <script> 
-    const quill = new Quill('#editor', 
-    {
-        // theme: 'snow',
-        // modules: {
-        //     toolbar: [
-        //         ['bold', 'italic', 'underline'],
-        //         ['image', 'code-block'],
-        //         [{ 'list': 'ordered'}, { 'list': 'bullet' }]
-        //     ]
-        // }
-    });
-
-    let c = '<%-content%>';
+    let c = '<%-instruction.content%>';
     let utfC = decodeURIComponent(atob(c));
-    const content = JSON.parse(utfC); 
-    quill.setContents(content); 
-    
-    quill.enable(false); // make editor read-only
-
-    function arrayBufferToBase64( buffer ) {
-        var binary = '';
-        var bytes = new Uint8Array( buffer );
-        var len = bytes.byteLength;
-        for (var i = 0; i < len; i++) {
-            binary += String.fromCharCode( bytes[ i ] );
-        }
-        return window.btoa( binary );
-    }
-
-    function base64ToArrayBuffer(base64) {
-        var binary_string =  window.atob(base64);
-        var len = binary_string.length;
-        var bytes = new Uint8Array( len );
-        for (var i = 0; i < len; i++)        {
-            bytes[i] = binary_string.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
+    const content = utfC;
+    document.getElementById('content').innerHTML = content;  
 </script>
