@@ -15,8 +15,7 @@ const getListInstructionsPage = async (req, res) => {
         let instructions = await Instruction.find({}, { _id: 1, number: 1, title: 1, description: 1 }).sort({ number: 1 });
         if (!instructions) {
             instructions = [];
-        }
-        console.log(instructions);
+        }        
         res.render('listInstructions', { title: 'ADR app', instructions: instructions, layout: 'layouts/main' });
     } catch (error) {
         console.log(error);
@@ -62,10 +61,26 @@ const getShowInstructionPage = async (req, res) => {
     }
 }
 
+const getDeleteInstructionPage = async (req, res) => {
+    try {
+        let result = await Instruction.deleteOne({_id: req.params.id });
+
+        if(result.deletedCount === 0) {
+            return res.status(404).send('Instruction not found');
+        }
+
+        res.redirect('/getListInstructionsPage');
+
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
+}
+
 module.exports = {
     getHomePage,
     getListInstructionsPage,
     getAddInstructionPage,
     getEditInstructionPage,
-    getShowInstructionPage
+    getShowInstructionPage,
+    getDeleteInstructionPage
 }

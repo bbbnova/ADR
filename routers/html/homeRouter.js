@@ -8,5 +8,6 @@ router.get('/getListInstructionsPage', htmlHomeControler.getListInstructionsPage
 router.get('/getAddInstructionPage', htmlHomeControler.getAddInstructionPage);
 router.get('/getEditInstructionPage/:id', htmlHomeControler.getEditInstructionPage);
 router.get('/getShowInstructionPage/:id', htmlHomeControler.getShowInstructionPage);
+router.get('/getDeleteInstructionPage/:id', htmlHomeControler.getDeleteInstructionPage);
 
 module.exports = router;

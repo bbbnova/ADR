@@ -7,6 +7,7 @@ require('dotenv').config();
 const app = express();
 const homeRouter = require('./routers/html/homeRouter');
 const apiRouter = require('./routers/api/addInstructionRouter');
+const excelRouter = require('./routers/api/excelRouter');
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +22,7 @@ app.use(expressLayouts);
 // Routes
 app.use('/', homeRouter);
 app.use('/api/', apiRouter);
+app.use('/excel/', excelRouter);
 
 // 404 handler
 app.use((req, res) => {
