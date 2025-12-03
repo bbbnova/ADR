@@ -7,10 +7,11 @@ const substanceSchema = new mongoose.Schema({
       ref: 'Instruction',
       required: true
     },
-    unNumber: Number,
+    unNumber: String,
     nameBg: String,
     nameEn: String,
     description: String,
+    polimerization: Boolean,
     reactsWithWater: Boolean,
     reactionProduct: String,
     hazardClass: String,
@@ -19,7 +20,7 @@ const substanceSchema = new mongoose.Schema({
     version: Number
   });
 
-const Instruction = 
+const Substance = 
   mongoose.model('Substance', substanceSchema);
 
 module.exports = Substance;

@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 
 // Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
+app.use(express.json({ limit: '300kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(expressLayouts);
 

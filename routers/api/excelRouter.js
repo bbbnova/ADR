@@ -3,6 +3,6 @@ const app = express();
 const router = express.Router();
 const excelControler = require('../../controlers/excelControler')
 
-router.get('/read', excelControler.readExcel); 
+router.get('/readSubstances', excelControler.readSubstances);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const instructionSchema = new mongoose.Schema({
     instructionId: String,
-    number: Number,
+    number: String,
     title: String,
     description: String,
     content: String,
