@@ -1,1 +1,68 @@
-<h1>Edit substance</h1>
+<div class="container">
+    <h1>Edit Substance</h1>
+    <form id="substanceForm">
+        <div class="form-group">
+            <label for="unNumber">Number</label>
+            <input type="number" id="unNumber" name="unNumber" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nameBg">Name</label>
+            <input type="text" id="nameBg" name="nameBg" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" required>
+        </div> 
+
+        <button type="submit">Save substance</button>
+    </form>
+</div>
+
+<script>
+    let editor;
+    let substance;
+    
+    window.onload = function() { 
+
+        substance = '<%- JSON.stringify(substance) %>';
+        substance = JSON.parse(substance);
+        document.getElementById('unNumber').value = substance.unNumber;
+        document.getElementById('nameBg').value = substance.nameBg;
+        document.getElementById('description').value = substance.description;
+    };
+
+    document.getElementById('substanceForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const unNumber = document.getElementById('unNumber').value;
+        const nameBg = document.getElementById('nameBg').value;
+        const description = document.getElementById('description').value;
+        const _id = substance._id;         
+
+        try {
+            const response = await fetch('/api/substances/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    _id: _id,
+                    unNumber: unNumber,
+                    nameBg: nameBg, 
+                    description: description,
+                    content: contentBase64
+                })
+            });
+            
+            if (response.ok) {
+                let substance = await response.json();
+                window.location.href = `/admin/substances/show/${substance._id}`;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    
+
+</script>

@@ -25,7 +25,7 @@ const getListSubstancePage = async (req, res) => {
 const getEditSubstancePage = async (req, res) => {
     try {
         let substance = await Substance.findOne({_id: req.params.id });
-            
+        console.log(substance);    
         res.render('editSubstance', { 
             title: 'ADR app', 
             substance: substance, 
