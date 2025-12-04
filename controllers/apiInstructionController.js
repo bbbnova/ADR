@@ -1,5 +1,3 @@
-const express = require('express');
-const app = express(); 
 const Instruction = require('../models/instructionModel');
 
 const addInstruction = async (req, res) => {

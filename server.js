@@ -5,8 +5,11 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
-const homeRouter = require('./routers/html/homeRouter');
-const apiRouter = require('./routers/api/addInstructionRouter');
+const dashboardRouter = require('./routers/admin/dashboard');
+const instructionRouter = require('./routers/admin/instructionRouter');
+const substanceRouter = require('./routers/admin/substanceRouter');
+const apiInstructionRouter = require('./routers/api/instructionRouter');
+const apiSubstanceRouter = require('./routers/api/substanceRouter');
 const excelRouter = require('./routers/api/excelRouter');
 
 // View engine setup
@@ -15,13 +18,16 @@ app.set('view engine', 'ejs');
 
 // Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json({ limit: '300kb' }));
+app.use(express.json({ limit: '500kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(expressLayouts);
 
 // Routes
-app.use('/', homeRouter);
-app.use('/api/', apiRouter);
+app.use('/admin/', dashboardRouter);
+app.use('/admin/instructions/', instructionRouter);
+app.use('/admin/substances/', substanceRouter);
+app.use('/api/instructions/', apiInstructionRouter);
+app.use('/api/substances/', apiSubstanceRouter);
 app.use('/excel/', excelRouter);
 
 // 404 handler

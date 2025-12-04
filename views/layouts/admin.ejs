@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/headStandart.ejs")  %>
+    <%- include("../partials/headEditor.ejs")  %>
+</head>
+<body>
+    <header>
+        <h1>Welcome to <a href="/admin"><%= title %></a></h1>
+    </header>
+
+    <main>
+        <%- body %>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My App. All rights reserved.</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

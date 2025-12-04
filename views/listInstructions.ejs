@@ -4,9 +4,9 @@
             <p>Number: <%= instruction.number %></p> 
             <p>Title: <%= instruction.title %></p>
             <p><%= instruction.description %></p>
-            <a href="/getEditInstructionPage/<%= instruction._id %>">Edit</a>
-            <a href="/getShowInstructionPage/<%= instruction._id %>">Show</a>
-            <a href="/getDeleteInstructionPage/<%= instruction._id %>">Delete</a>
+            <a href="/admin/instructions/edit/<%= instruction._id %>">Edit</a>
+            <a href="/admin/instructions/show/<%= instruction._id %>">Show</a>
+            <a href="/admin/instructions/delete/<%= instruction._id %>">Delete</a>
         </div>
     <% }); %>
 </div>

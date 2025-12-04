@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const excelControler = require('../../controlers/excelControler')
+const excelControler = require('../../controllers/excelController')
 
 router.get('/readSubstances', excelControler.readSubstances);
 

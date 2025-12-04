@@ -1,14 +1,6 @@
-const express = require('express');
-const app = express(); 
 const Instruction = require('../models/instructionModel');
 
-const getHomePage = async (req, res) => {
-    try {
-        res.render('home', { title: 'ADR app', layout: 'layouts/main'});
-    } catch (error) {
-        res.status(500).send('Server Error');
-    }
-}
+
 
 const getListInstructionsPage = async (req, res) => {
     try {
@@ -16,7 +8,7 @@ const getListInstructionsPage = async (req, res) => {
         if (!instructions) {
             instructions = [];
         }        
-        res.render('listInstructions', { title: 'ADR app', instructions: instructions, layout: 'layouts/main' });
+        res.render('listInstructions', { title: 'ADR app', instructions: instructions, layout: 'layouts/admin' });
     } catch (error) {
         console.log(error);
         res.status(500).send('Server Error');
@@ -27,7 +19,7 @@ const getAddInstructionPage = async (req, res) => {
     try {
         res.render('addInstruction', { 
             title: 'ADR app', 
-            layout: 'layouts/main' });
+            layout: 'layouts/admin' });
     } catch (error) {
         res.status(500).send('Server Error');
     }
@@ -40,7 +32,7 @@ const getEditInstructionPage = async (req, res) => {
         res.render('editInstruction', { 
             title: 'ADR app', 
             instruction: instruction, 
-            layout: 'layouts/main' });
+            layout: 'layouts/admin' });
 
     } catch (error) {
         res.status(500).send('Server Error');
@@ -54,7 +46,7 @@ const getShowInstructionPage = async (req, res) => {
         res.render('showInstruction', { 
             title: 'ADR app', 
             instruction: instruction, 
-            layout: 'layouts/main' });
+            layout: 'layouts/admin' });
 
     } catch (error) {
         res.status(500).send('Server Error');
@@ -69,15 +61,14 @@ const getDeleteInstructionPage = async (req, res) => {
             return res.status(404).send('Instruction not found');
         }
 
-        res.redirect('/getListInstructionsPage');
+        res.redirect('/admin/instructions/');
 
     } catch (error) {
         res.status(500).send('Server Error');
     }
 }
 
-module.exports = {
-    getHomePage,
+module.exports = {    
     getListInstructionsPage,
     getAddInstructionPage,
     getEditInstructionPage,

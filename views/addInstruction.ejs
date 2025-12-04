@@ -41,7 +41,7 @@
         let contentBase64 = btoa(encodeURIComponent(content));
 
         try {
-            const response = await fetch('/api/addInstruction', {
+            const response = await fetch('/api/instructions/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -54,7 +54,7 @@
             
             if (response.ok) {
                 let instruction = await response.json();
-                window.location.href = `/getShowInstructionPage/${instruction._id}`;
+                window.location.href = `/admin/instructions/show/${instruction._id}`;
             }
         } catch (error) {
             console.error('Error:', error);
