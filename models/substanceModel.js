@@ -17,6 +17,13 @@ const substanceSchema = new mongoose.Schema({
     hazardClass: String,
     hazardSubclass: String,
     dangerNumber: String,
+    isToxic: Boolean,
+    smallSpillInitialIsolationDistance: mongoose.Schema.Types.Decimal128,
+    smallSpillProtectiveActionDayDistance: mongoose.Schema.Types.Decimal128,
+    smallSpillProtectiveActionNightDistance: mongoose.Schema.Types.Decimal128,
+    largeSpillInitialIsolationDistance: mongoose.Schema.Types.Decimal128,
+    largeSpillProtectiveActionDayDistance: mongoose.Schema.Types.Decimal128,
+    largeSpillProtectiveActionNightDistance: mongoose.Schema.Types.Decimal128,
     version: Number
   });
 
