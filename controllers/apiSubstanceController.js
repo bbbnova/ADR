@@ -58,7 +58,7 @@ const updateSubstance = async (req, res) => {
                 }
             }) 
 
-              
+        console.log(result);  
         if(result.acknowledged){
             let substance = 
                 await Substance.findOne({_id: req.body._id});

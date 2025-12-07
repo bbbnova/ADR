@@ -208,10 +208,59 @@ const readSubclasses = async (req, res) => {    //ADR2023_Substances.xlsx
     }
 }
 
+const readExplosiveSubstances = async (req, res) => {
+    try {
+        var workbook = new Excel.Workbook();
+
+        workbook.xlsx.readFile('../../Info/inland-transport-of-dangerous-goods-directive--annex-i---adr-export.xlsx').then(async function() {
+            var worksheet = workbook.getWorksheet(1);
+            let i = 1;
+            let instruction112 = await Instruction.findOne({number: 112});
+            let instruction114 = await Instruction.findOne({number: 114});
+
+            for(i=6; i<=388; i++){
+                let row = worksheet.getRow(i);
+                let substances = await Substance.find({ unNumber: row.values[12]});
+                if (substances.length === 0)
+                {
+                    let subclass = "";
+                    if(row.values[7].toString().split("+")[0].split(".").length > 1){
+                        subclass = row.values[7].toString().split("+")[0].split(".")[1];
+                    }
+
+                    let substance = await Substance.create({
+                        unNumber: row.values[12], 
+                        nameEn: row.values[1], 
+                        instruction: 
+                        instruction112._id,
+                        hazardClass: row.values[7].toString().split("+")[0],
+                        hazardSubclass: subclass
+                    });
+                    
+                    // let substance = {
+                    //     unNumber: row.values[12], 
+                    //     nameEn: row.values[1], 
+                    //     instruction: 
+                    //     instruction112._id,
+                    //     hazardClass: row.values[7].toString().split("+")[0],
+                    //     hazardSubclass: subclass
+                    // };
+                    console.log(substance.unNumber + "  "+substance.hazardClass)
+                } 
+            }
+            res.sendStatus(200);
+        });
+
+    } catch (error) {
+        res.sendStatus(500)
+    }
+}
+
 module.exports = {
     readSubstances,
     readDistances,
     readWaterReactions,
     readSubstanceParameters,
-    readSubclasses
+    readSubclasses,
+    readExplosiveSubstances
 }

@@ -38,7 +38,11 @@
 
         <div class="form-group">
             <label for="reactsWithWater">Реагира с вода</label>
-            <input type="checkbox" id="reactsWithWater" name="reactsWithWater" checked="<%=substance.reactsWithWater%>">
+            <%if(substance.reactsWithWater) {%>
+                <input type="checkbox" id="reactsWithWater" name="reactsWithWater" checked>
+            <%} else {%>
+                <input type="checkbox" id="reactsWithWater" name="reactsWithWater">
+            <%}%>
         </div>
 
         <div class="form-group">
@@ -48,12 +52,20 @@
 
         <div class="form-group">
             <label for="polimerization">Полимеризация</label>
-            <input type="checkbox" id="polimerization" name="polimerization" checked="<%=substance.polimerization%>">
+            <%if(substance.polimerization) {%>
+                <input type="checkbox" id="polimerization" name="polimerization" checked>
+            <%} else {%>
+                <input type="checkbox" id="polimerization" name="polimerization">
+            <%}%>
         </div>
 
         <div class="form-group">
             <label for="isToxic">Токсичен</label>
-            <input type="checkbox" id="isToxic" name="isToxic" checked="<%=substance.isToxic%>">
+            <%if(substance.isToxic) {%>
+                <input type="checkbox" id="isToxic" name="isToxic" checked>
+            <%} else {%>
+                <input type="checkbox" id="isToxic" name="isToxic">
+            <%}%>
         </div>
 
         <p>малък разлив, първоначално изолиране: <input style="width: 100px;" type="smallSpillInitialIsolationDistance" id="smallSpillInitialIsolationDistance" name="smallSpillInitialIsolationDistance" value="<%= substance.smallSpillInitialIsolationDistance %>"></input> м</p>
@@ -75,8 +87,8 @@
 
 <script>
     let editor;
-    let substance;
-    
+    let substance_id = '<%- substance._id %>';
+    console.log(substance_id)
     // window.onload = function() { 
 
     //     substance = '<%- JSON.stringify(substance) %>';
@@ -115,7 +127,7 @@
         const largeSpillProtectiveActionDayDistance = document.getElementById('largeSpillProtectiveActionDayDistance').value;
         const largeSpillProtectiveActionNightDistance = document.getElementById('largeSpillProtectiveActionNightDistance').value;
         const instructionNumber = document.getElementById('instruction').value;
-        const _id = substance._id;         
+        const _id = substance_id;         
 
         try {
             const response = await fetch('/api/substances/update', {
