@@ -4,12 +4,7 @@ const Substance = require('../models/substanceModel');
 
 const getListSubstancePage = async (req, res) => {
     try {
-        let substances = await Substance.find({}, { 
-            _id: 1, 
-            unNumber: 1,
-            nameBg: 1,
-            dangerNumber: 1
-        }).sort({ unNumber: 1 });
+        let substances = await Substance.find({}).sort({ unNumber: 1 });
 
         if (!substances) {
             substances = [];
@@ -24,7 +19,7 @@ const getListSubstancePage = async (req, res) => {
 
 const getEditSubstancePage = async (req, res) => {
     try {
-        let substance = await Substance.findOne({_id: req.params.id });
+        let substance = await Substance.findOne({_id: req.params.id }).populate('instruction');
         
         res.render('editSubstance', { 
             title: 'ADR app', 
@@ -38,7 +33,7 @@ const getEditSubstancePage = async (req, res) => {
 
 const getShowSubstancePage = async (req, res) => {
     try {
-        let substance = await Substance.findOne({_id: req.params.id });
+        let substance = await Substance.findOne({_id: req.params.id }).populate('instruction');
             
         res.render('showSubstance', { 
             title: 'ADR app', 

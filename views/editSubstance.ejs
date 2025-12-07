@@ -2,19 +2,72 @@
     <h1>Edit Substance</h1>
     <form id="substanceForm">
         <div class="form-group">
-            <label for="unNumber">Number</label>
-            <input type="number" id="unNumber" name="unNumber" required>
+            <label for="unNumber">ООН номер</label>
+            <input type="number" id="unNumber" name="unNumber" required value="<%=substance.unNumber%>">
         </div>
 
         <div class="form-group">
-            <label for="nameBg">Name</label>
-            <input type="text" id="nameBg" name="nameBg" required>
+            <label for="nameBg">Наименование</label>
+            <input type="text" id="nameBg" name="nameBg" required value="<%=substance.nameBg%>">
         </div>
 
         <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" id="description" name="description" required>
-        </div> 
+            <label for="nameEn">Наименование EN</label>
+            <input type="text" id="nameEn" name="nameEn" value="<%=substance.nameEn%>">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <input type="text" id="description" name="description" value="<%=substance.description%>">
+        </div>
+
+        <div class="form-group">
+            <label for="hazardClass">Клас на опасност</label>
+            <input type="text" id="hazardClass" name="hazardClass" value="<%=substance.hazardClass%>">
+        </div>
+        
+        <div class="form-group">
+            <label for="hazardSubclass">Подклас</label>
+            <input type="text" id="hazardSubclass" name="hazardSubclass" value="<%=substance.hazardSubclass%>">
+        </div>
+
+        <div class="form-group">
+            <label for="dangerNumber">Код на опасност</label>
+            <input type="text" id="dangerNumber" name="dangerNumber" value="<%=substance.dangerNumber%>">
+        </div>
+
+        <div class="form-group">
+            <label for="reactsWithWater">Реагира с вода</label>
+            <input type="checkbox" id="reactsWithWater" name="reactsWithWater" checked="<%=substance.reactsWithWater%>">
+        </div>
+
+        <div class="form-group">
+            <label for="reactionProduct">Продукт на реакцията</label>
+            <input type="text" id="reactionProduct" name="reactionProduct" value="<%= substance.reactionProduct %>">
+        </div>
+
+        <div class="form-group">
+            <label for="polimerization">Полимеризация</label>
+            <input type="checkbox" id="polimerization" name="polimerization" checked="<%=substance.polimerization%>">
+        </div>
+
+        <div class="form-group">
+            <label for="isToxic">Токсичен</label>
+            <input type="checkbox" id="isToxic" name="isToxic" checked="<%=substance.isToxic%>">
+        </div>
+
+        <p>малък разлив, първоначално изолиране: <input style="width: 100px;" type="smallSpillInitialIsolationDistance" id="smallSpillInitialIsolationDistance" name="smallSpillInitialIsolationDistance" value="<%= substance.smallSpillInitialIsolationDistance %>"></input> м</p>
+        <p>малък разлив, евакуация през деня: <input style="width: 100px;" type="text" id="smallSpillProtectiveActionDayDistance" name="smallSpillProtectiveActionDayDistance" value="<%= substance.smallSpillProtectiveActionDayDistance %>"></input> м</p>
+        <p>малък разлив, евакуация през нощта: <input style="width: 100px;" type="text" id="smallSpillProtectiveActionNightDistance" name="smallSpillProtectiveActionNightDistance" value="<%= substance.smallSpillProtectiveActionNightDistance %>"></input> м</p>
+
+        <p>голям разлив, първоначално изолиране: <input style="width: 100px;" type="text" id="largeSpillInitialIsolationDistance" name="largeSpillInitialIsolationDistance" value="<%= substance.largeSpillInitialIsolationDistance %>"></input> м</p>
+        <p>голям разлив, евакуация през деня: <input style="width: 100px;" type="text" id="largeSpillProtectiveActionDayDistance" name="largeSpillProtectiveActionDayDistance" value="<%= substance.largeSpillProtectiveActionDayDistance %>"></input> м</p>
+        <p>голям разлив, евакуация през нощта: <input style="width: 100px;" type="text" id="largeSpillProtectiveActionNightDistance" name="largeSpillProtectiveActionNightDistance" value="<%= substance.largeSpillProtectiveActionNightDistance %>"></input> м</p>
+
+        <div class="form-group">
+            <label for="instruction">Инструкция</label>
+            <input type="text" id="instruction" name="instruction" required value="<%=substance.instruction.number%>">
+        </div>
 
         <button type="submit">Save substance</button>
     </form>
@@ -24,21 +77,44 @@
     let editor;
     let substance;
     
-    window.onload = function() { 
+    // window.onload = function() { 
 
-        substance = '<%- JSON.stringify(substance) %>';
-        substance = JSON.parse(substance);
-        document.getElementById('unNumber').value = substance.unNumber;
-        document.getElementById('nameBg').value = substance.nameBg;
-        document.getElementById('description').value = substance.description;
-    };
+    //     substance = '<%- JSON.stringify(substance) %>';
+    //     substance = JSON.parse(substance);
+    //     document.getElementById('unNumber').value = substance.unNumber;
+    //     document.getElementById('nameBg').value = substance.nameBg;
+    //     document.getElementById('nameEn').value = substance.nameEn;
+    //     document.getElementById('description').value = substance.description;
+    //     document.getElementById('hazardClass').value = substance.hazardClass;
+    //     document.getElementById('hazardSubclass').value = substance.hazardSubclass;
+    //     document.getElementById('dangerNumber').value = substance.dangerNumber; 
+    //     document.getElementById('isToxic').checked = substance.isToxic;
+    //     document.getElementById('reactsWithWater').checked = substance.reactsWithWater;
+    //     document.getElementById('reactionProduct').value = substance.reactionProduct;
+    //     document.getElementById('polimerization').checked = substance.polimerization;
+    // };
 
     document.getElementById('substanceForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const unNumber = document.getElementById('unNumber').value;
         const nameBg = document.getElementById('nameBg').value;
+        const nameEn = document.getElementById('nameEn').value;
         const description = document.getElementById('description').value;
+        const hazardClass = document.getElementById('hazardClass').value;
+        const hazardSubclass = document.getElementById('hazardSubclass').value;
+        const dangerNumber = document.getElementById('dangerNumber').value;
+        const isToxic = document.getElementById('isToxic').checked;
+        const reactsWithWater = document.getElementById('reactsWithWater').checked;
+        const reactionProduct = document.getElementById('reactionProduct').value;
+        const polimerization = document.getElementById('polimerization').checked;
+        const smallSpillInitialIsolationDistance = document.getElementById('smallSpillInitialIsolationDistance').value;
+        const smallSpillProtectiveActionDayDistance = document.getElementById('smallSpillProtectiveActionDayDistance').value;
+        const smallSpillProtectiveActionNightDistance = document.getElementById('smallSpillProtectiveActionNightDistance').value;
+        const largeSpillInitialIsolationDistance = document.getElementById('largeSpillInitialIsolationDistance').value;
+        const largeSpillProtectiveActionDayDistance = document.getElementById('largeSpillProtectiveActionDayDistance').value;
+        const largeSpillProtectiveActionNightDistance = document.getElementById('largeSpillProtectiveActionNightDistance').value;
+        const instructionNumber = document.getElementById('instruction').value;
         const _id = substance._id;         
 
         try {
@@ -49,8 +125,22 @@
                     _id: _id,
                     unNumber: unNumber,
                     nameBg: nameBg, 
+                    nameEn: nameEn,
                     description: description,
-                    content: contentBase64
+                    hazardClass: hazardClass,
+                    hazardSubclass: hazardSubclass,
+                    dangerNumber: dangerNumber,
+                    isToxic: isToxic,
+                    reactsWithWater: reactsWithWater,
+                    reactionProduct: reactionProduct,
+                    polimerization: polimerization,
+                    smallSpillInitialIsolationDistance: smallSpillInitialIsolationDistance,
+                    smallSpillProtectiveActionDayDistance: smallSpillProtectiveActionDayDistance,
+                    smallSpillProtectiveActionNightDistance: smallSpillProtectiveActionNightDistance,
+                    largeSpillInitialIsolationDistance: largeSpillInitialIsolationDistance,
+                    largeSpillProtectiveActionDayDistance: largeSpillProtectiveActionDayDistance,
+                    largeSpillProtectiveActionNightDistance: largeSpillProtectiveActionNightDistance,
+                    instructionNumber: instructionNumber
                 })
             });
             

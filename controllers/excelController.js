@@ -115,7 +115,7 @@ function getDistanceInMeters(cellValue){
     return ret;
 }
 
-const readeWaterReactions = async (req, res) => {
+const readWaterReactions = async (req, res) => {
     try {
         var workbook = new Excel.Workbook();
 
@@ -147,8 +147,45 @@ const readeWaterReactions = async (req, res) => {
     }
 }
 
+const readSubstanceParameters = async (req, res) => {
+    try {
+        var workbook = new Excel.Workbook();
+
+        workbook.xlsx.readFile('../../Info/inland-transport-of-dangerous-goods-directive--annex-i---adr-export.xlsx').then(async function() {
+            var worksheet = workbook.getWorksheet(1);
+            let i = 1;
+            for(i=6; i<=6147; i++){
+                let row = worksheet.getRow(i);
+                let substances = await Substance.find({ unNumber: row.values[12]});
+                for(let substance of substances){
+                    if(substance){
+                        substance.nameEn = row.values[1].toString().trim();
+                        substance.hazardClass = row.values[6].toString().trim();
+                        let classArray = row.values[6].toString().trim().split(".");
+                        
+                        if(classArray.length > 1) {
+                            substance.hazardSubclass = classArray[1];
+                        }
+
+                        if(typeof row.values[16] !== 'undefined' && row.values[16] !== null){
+                            substance.dangerNumber = row.values[16];
+                        }
+                        
+                        await substance.save(); 
+                    }
+                }
+            }
+            res.sendStatus(200);
+        });
+
+    } catch (error) {
+        res.sendStatus(500)
+    }
+}
+
 module.exports = {
     readSubstances,
     readDistances,
-    readeWaterReactions
+    readWaterReactions,
+    readSubstanceParameters
 }

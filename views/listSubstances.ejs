@@ -1,11 +1,26 @@
-<div class="gridContainer">
+<div class="gridContainerSubstances">
     <% substances.forEach(substance => { %>
-        <div class="substanceCard">
-            <p>UN number: <b><%= substance.unNumber %></b></p> 
-            <p>Name: <b><%= substance.nameBg %></b></p>
-            <a href="/admin/substances/edit/<%= substance._id %>">Edit</a>
-            <a href="/admin/substances/show/<%= substance._id %>">Show</a>
-            <a href="/admin/substances/delete/<%= substance._id %>">Delete</a>
+        <div id="<%= substance._id %>" class="substanceCard">
+            <p>UN: <b><%= substance.unNumber %></b></p>             
+            <p>Danger code: <b><%= substance.dangerNumber %></b></p> 
+            <p>Hazard class: <b><%= substance.hazardClass %></b></p>
+            <p>Hazard subclass: <b><%= substance.hazardSubclass %></b></p>            
+            <p><b><%= substance.nameBg %></b></p>
+            <!-- <p><b><%= substance.nameEn %></b></p> -->
+            <% if(substance.isToxic) { %>
+                <p class="isToxic"><b>ТОКСИЧНО</b></p>
+            <% } %>
+            <% if(substance.polimerization) { %>
+                <p class="polimerization"><b>ПОЛИМЕРИЗАЦИЯ</b></p>
+            <% } %>
+            <% if(substance.reactsWithWater) { %>
+                <p class="reactsWithWater"><b>РЕАГИРА С ВОДА</b></p>
+            <% } %>
+            <p>
+                <a href="/admin/substances/edit/<%= substance._id %>">Edit</a>
+                <a href="/admin/substances/show/<%= substance._id %>">Show</a>
+                <a href="/admin/substances/delete/<%= substance._id %>">Delete</a>
+            </p>
         </div>
     <% }); %>
 </div>

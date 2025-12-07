@@ -1,1 +1,34 @@
-<h1>Substance</h1>
+<div class="container">
+
+    <h1><%= substance.nameBg %></h1>
+    <p><strong>ООН код:</strong> <%= substance.unNumber %></p> 
+
+    <p>Name: <strong><%= substance.nameEn %></strong></p>
+    <p>Код на опасност: <strong><%= substance.dangerNumber %></strong></p> 
+    <p>Клас на опасност: <strong><%= substance.hazardClass %></strong></p>
+    <p>Подклас на опасност: <strong><%= substance.hazardSubclass %></strong></p>
+
+    <%if (substance.reactsWithWater) { %>
+        <p class="reactsWithWater">Реагира с вода: <strong>Да</strong></p>
+        <p>Продукт на реакцията:<strong><%= substance.reactionProduct %></strong></p> 
+    <% } %>
+
+    <%if (substance.polimerization) { %>
+        <p class="polimerization"><strong>Полимеризира:</strong> Да</p>  
+    <% } %>
+
+    <%if (substance.isToxic) { %>
+        <p>Токсичен: <strong>Да</strong> </p>
+        <p>малък разлив, първоначално изолиране: <strong><%= substance.smallSpillInitialIsolationDistance %></strong> м</p>
+        <p>малък разлив, евакуация през деня: <strong><%= substance.smallSpillProtectiveActionDayDistance %></strong> м</p>
+        <p>малък разлив, евакуация през нощта: <strong><%= substance.smallSpillProtectiveActionNightDistance %></strong> м</p>
+
+        <p>голям разлив, първоначално изолиране: <strong><%= substance.largeSpillInitialIsolationDistance %></strong> м</p>
+        <p>голям разлив, евакуация през деня: <strong><%= substance.largeSpillProtectiveActionDayDistance %></strong> м</p>
+        <p>голям разлив, евакуация през нощта: <strong><%= substance.largeSpillProtectiveActionNightDistance %></strong> м</p>
+    <% } else { %>
+        <p>Токсичен: <strong>Не</strong></p>
+    <% } %>
+    <p><strong><a href="/admin/instructions/show/<%= substance.instruction._id %>"><%= substance.instruction.number %></a></strong></p>
+    <a href="/admin/substances#<%=substance._id%>">Back to List</a>
+</div>
