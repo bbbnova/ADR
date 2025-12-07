@@ -183,9 +183,35 @@ const readSubstanceParameters = async (req, res) => {
     }
 }
 
+const readSubclasses = async (req, res) => {    //ADR2023_Substances.xlsx
+    try {
+        var workbook = new Excel.Workbook();
+
+        workbook.xlsx.readFile('../../Info/ADR2023_Substances.xlsx').then(async function() {
+            var worksheet = workbook.getWorksheet(1);
+            let i = 1;
+            for(i=4; i<=2931; i++){
+                let row = worksheet.getRow(i);
+                let substances = await Substance.find({ unNumber: row.values[2]});
+                for(let substance of substances){
+                    if(substance){
+                        substance.hazardSubclass = row.values[5].toString().trim();                    
+                        await substance.save(); 
+                    }
+                }
+            }
+            res.sendStatus(200);
+        });
+
+    } catch (error) {
+        res.sendStatus(500)
+    }
+}
+
 module.exports = {
     readSubstances,
     readDistances,
     readWaterReactions,
-    readSubstanceParameters
+    readSubstanceParameters,
+    readSubclasses
 }

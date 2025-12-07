@@ -7,5 +7,6 @@ router.get('/readSubstances', excelControler.readSubstances);
 router.get('/readDistances', excelControler.readDistances);
 router.get('/readWaterReactions', excelControler.readWaterReactions);
 router.get('/readSubstanceParameters', excelControler.readSubstanceParameters);
+router.get('/readSubclasses', excelControler.readSubclasses);
 
 module.exports = router;
