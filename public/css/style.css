@@ -127,3 +127,9 @@ footer {
     text-decoration-line: none;
     text-decoration-style: none;
 }
+
+.image img{
+    display: inline;
+    width: 100px;
+    height: 100px;
+}

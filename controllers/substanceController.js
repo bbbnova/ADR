@@ -1,5 +1,5 @@
 const Substance = require('../models/substanceModel');
-
+const ImageCodes = require('../modules/imageCodes');
 
 
 const getListSubstancePage = async (req, res) => {
@@ -34,15 +34,35 @@ const getEditSubstancePage = async (req, res) => {
 const getShowSubstancePage = async (req, res) => {
     try {
         let substance = await Substance.findOne({_id: req.params.id }).populate('instruction');
+        
+        if(substance) {
+            let imgs = [];
+            fillImages(imgs, substance);
             
-        res.render('showSubstance', { 
-            title: 'ADR app', 
-            substance: substance, 
-            layout: 'layouts/admin' });
+            res.render('showSubstance', { 
+                title: 'ADR app', 
+                substance: substance, 
+                images: imgs,
+                layout: 'layouts/admin' });
+        }
 
     } catch (error) {
         res.status(500).send('Server Error');
     }
+}
+
+function fillImages(imgs, substance) {
+    ImageCodes.forEach(code => {
+        if(code.class === substance.hazardClass && code.class.length > 1) {
+            imgs.push(code.image)
+        }
+
+        if(code.class === substance.hazardClass && code.class.length === 1) {
+            if(substance.hazardSubclass.includes(code.subclass)){
+                imgs.push(code.image)
+            }
+        }
+    });
 }
 
 const getDeleteSubstancePage = async (req, res) => {

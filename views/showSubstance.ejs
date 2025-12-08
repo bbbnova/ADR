@@ -7,6 +7,12 @@
     <p>Код на опасност: <strong><%= substance.dangerNumber %></strong></p> 
     <p>Клас на опасност: <strong><%= substance.hazardClass %></strong></p>
     <p>Подклас на опасност: <strong><%= substance.hazardSubclass %></strong></p>
+    
+    <div class="image">
+        <% images.forEach(img => {  %>
+            <img src="/img/plates/<%=img%>"/>
+        <%});%>
+    </div>
 
     <%if (substance.reactsWithWater) { %>
         <p class="reactsWithWater">Реагира с вода: <strong>Да</strong></p>

@@ -87,24 +87,7 @@
 
 <script>
     let editor;
-    let substance_id = '<%- substance._id %>';
-    console.log(substance_id)
-    // window.onload = function() { 
-
-    //     substance = '<%- JSON.stringify(substance) %>';
-    //     substance = JSON.parse(substance);
-    //     document.getElementById('unNumber').value = substance.unNumber;
-    //     document.getElementById('nameBg').value = substance.nameBg;
-    //     document.getElementById('nameEn').value = substance.nameEn;
-    //     document.getElementById('description').value = substance.description;
-    //     document.getElementById('hazardClass').value = substance.hazardClass;
-    //     document.getElementById('hazardSubclass').value = substance.hazardSubclass;
-    //     document.getElementById('dangerNumber').value = substance.dangerNumber; 
-    //     document.getElementById('isToxic').checked = substance.isToxic;
-    //     document.getElementById('reactsWithWater').checked = substance.reactsWithWater;
-    //     document.getElementById('reactionProduct').value = substance.reactionProduct;
-    //     document.getElementById('polimerization').checked = substance.polimerization;
-    // };
+    let substance_id = '<%- substance._id %>'; 
 
     document.getElementById('substanceForm').addEventListener('submit', async (e) => {
         e.preventDefault();

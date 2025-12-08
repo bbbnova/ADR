@@ -2,7 +2,6 @@ const Substance = require('../models/substanceModel');
 const Instruction = require('../models/instructionModel');
 
 const updateSubstance = async (req, res) => {
-
     try{
         let instruction = await Instruction.findOne({number: req.body.instructionNumber});
 
@@ -54,6 +53,24 @@ const updateSubstance = async (req, res) => {
     }
 }
 
+const deleteSubstance = async (req, res) => {
+    try {
+        let result = await Substance.deleteOne({_id: req.body._id});
+        if(result.acknowledged) {
+            if(result.deletedCount === 0) {
+                return res.status(404).send('Substance not found');
+            }
+            res.sendStatus(200);
+        } else {
+            console.log(result);
+        }
+    } catch(error) {
+        res.sendStatus(500);
+        console.log(error);
+    }
+}
+
 module.exports = {  
-    updateSubstance
+    updateSubstance,
+    deleteSubstance
 }
