@@ -35,26 +35,7 @@ const updateSubstance = async (req, res) => {
                     largeSpillInitialIsolationDistance: req.body.largeSpillInitialIsolationDistance,
                     largeSpillProtectiveActionDayDistance: req.body.largeSpillProtectiveActionDayDistance,
                     largeSpillProtectiveActionNightDistance: req.body.largeSpillProtectiveActionNightDistance,                    
-                    version: 1
-                    /*
-                    unNumber: unNumber,
-                    nameBg: nameBg, 
-                    nameEn: nameEn,
-                    description: description,
-                    hazardClass: hazardClass,
-                    hazardSubclass: hazardSubclass,
-                    dangerNumber: dangerNumber,
-                    isToxic: isToxic,
-                    reactsWithWater: reactsWithWater,
-                    reactionProduct: reactionProduct,
-                    polimerization: polimerization,
-                    smallSpillInitialIsolationDistance: smallSpillInitialIsolationDistance,
-                    smallSpillProtectiveActionDayDistance: smallSpillProtectiveActionDayDistance,
-                    smallSpillProtectiveActionNightDistance: smallSpillProtectiveActionNightDistance,
-                    largeSpillInitialIsolationDistance: largeSpillInitialIsolationDistance,
-                    largeSpillProtectiveActionDayDistance: largeSpillProtectiveActionDayDistance,
-                    largeSpillProtectiveActionNightDistance: largeSpillProtectiveActionNightDistance
-                    */
+                    version: 1 
                 }
             }) 
 
