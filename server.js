@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const app = express();
 const dashboardRouter = require('./routers/admin/dashboard');
+const dataRouter = require('./routers/admin/dataRouter');
 const instructionRouter = require('./routers/admin/instructionRouter');
 const substanceRouter = require('./routers/admin/substanceRouter');
 const apiInstructionRouter = require('./routers/api/instructionRouter');
@@ -18,12 +19,13 @@ app.set('view engine', 'ejs');
 
 // Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json({ limit: '500kb' }));
+app.use(express.json({ limit: '500000kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(expressLayouts);
 
 // Routes
 app.use('/admin/', dashboardRouter);
+app.use('/admin/exportdata', dataRouter);
 app.use('/admin/instructions/', instructionRouter);
 app.use('/admin/substances/', substanceRouter);
 app.use('/api/instructions/', apiInstructionRouter);
