@@ -1,0 +1,14 @@
+services:
+    #MongoDB service
+    mongo_db:
+        container_name: mongodb_container
+        image: mongo:8.0.4
+        ports:
+            - 27017:27017 # enable outside docker only for development
+        restart: unless-stopped
+        volumes: 
+            - mongo_db:/data/db
+
+volumes:
+    mongo_db:
+        driver: local

@@ -5,6 +5,27 @@ let Substance = require('../models/substanceModel');
 let Instruction = require('../models/instructionModel');
 
 
+const addInstructionStartup = async (req, res) => { //one 117 to copy over others
+    try {
+        let instruction117 = await Instruction.findOne({number: "117"});
+        for(let i = 118; i <= 172; i++) {
+            let newInstruction = await Instruction.create({
+                title: i, 
+                number: i, 
+                description: "ОПИСАНИЕ",
+                content: instruction117.content
+            });
+            if(newInstruction) {
+                console.log(newInstruction.title);
+            }
+        }
+        res.sendStatus(200);
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+}
+
 const readSubstances = async (req, res) => {
     try {
         var workbook = new Excel.Workbook();
@@ -231,8 +252,7 @@ const readExplosiveSubstances = async (req, res) => {
                     let substance = await Substance.create({
                         unNumber: row.values[12], 
                         nameEn: row.values[1], 
-                        instruction: 
-                        instruction112._id,
+                        instruction: subclass === "4" || subclass === "6" ? instruction114._id : instruction112._id,
                         hazardClass: row.values[7].toString().split("+")[0],
                         hazardSubclass: subclass
                     });
@@ -256,11 +276,13 @@ const readExplosiveSubstances = async (req, res) => {
     }
 }
 
+
 module.exports = {
     readSubstances,
     readDistances,
     readWaterReactions,
     readSubstanceParameters,
     readSubclasses,
-    readExplosiveSubstances
+    readExplosiveSubstances,
+    addInstructionStartup
 }
