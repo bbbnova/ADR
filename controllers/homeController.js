@@ -16,9 +16,10 @@ const getHomePage = async (req, res) => {
 
 const getSubstance = async (req, res) => {
     try {
+        
         let substances = await Substance.find(
             {
-                $or: [{unNumber: req.params.text.toString()}, {nameBg: {$regex : req.params.text}}]
+                $or: [{unNumber: req.params.text.toString()}, {nameBg: {$regex : req.params.text, $options: 'i'}}]
             }
         );
         
