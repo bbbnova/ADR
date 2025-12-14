@@ -9,29 +9,25 @@ body {
     overflow: hidden;
 }
 
-header {
+.header, .footer {
     background: #35424a;
     color: #ffffff;
     padding: 10px 0;
     text-align: center;
-}
-
-h1 {
-    margin: 0;
-}
-
-main {
-    overflow: auto;
-}
-
-footer {
-    background: #35424a;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
     width: 100%;
+}
+
+.header {
+    grid-row: 1;
+}
+
+.footer {
+    grid-row: 3;
+}
+
+.main {
+    grid-row: 2;
+    overflow-y: auto;
 }
 
 .gridContainer {
@@ -42,29 +38,17 @@ footer {
 }
 
 .instructionCard {
-    background: #ffffff;
+    background: #ffebcd;
     border: 1px solid #ffc46c;
     border-radius: 5px;
     padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.instructionCard:hover {
-    background-color: #ffd9ad;
-} 
-
-
-.gridContainerSubstances {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .substanceCard {
-    background: white;
-    border: 0px solid white;
-    border-radius: 10px;
+    background: rgb(228, 228, 228);
+    border: 0px solid rgb(145, 145, 145);
+    border-radius: 5px;
     padding: 15px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
@@ -93,43 +77,53 @@ footer {
     background-color: rgb(54, 54, 54);
 }
 
-а {
-    color: orange;
-    text-decoration: none;
-    text-decoration-line: none;
-    text-decoration-style: none;
-}
-
-а:link {
-    color: orange;
-    text-decoration: none;
-    text-decoration-line: none;
-    text-decoration-style: none;
-}
-
-а:link {
-    color: green;
-    text-decoration: none;
-    text-decoration-line: none;
-    text-decoration-style: none;
-}
-
-а:active {
-    color: darkgrey;
-    text-decoration: none;
-    text-decoration-line: none;
-    text-decoration-style: none;
-}
-
-а:visited {
-    color: orange;
-    text-decoration: none;
-    text-decoration-line: none;
-    text-decoration-style: none;
-}
-
 .image img{
     display: inline;
     width: 100px;
     height: 100px;
+}
+
+/* editing fields */
+.container { max-width: 800px; margin: 20px auto; }
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 5px; font-weight: bold; }
+input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
+#editor { height: 300px; }
+button { padding: 10px 20px; background: #0366d6; color: white; border: none; cursor: pointer; }
+button:hover { background: #0256c7; }
+.editor-container, #content { width: 795px; margin-left: auto; margin-right: auto; }
+
+
+.dropDown_text {
+    width: 300px;
+    display: inline-block;
+}
+
+.dropDown_text .text {
+    border: 1px solid grey;
+    border-radius: 5px;
+    outline: none;
+}
+
+.dropDown_text .dropDown{
+    display: none;
+    margin-top: 1px;
+    padding: 3px;
+    border: 1px grey solid; 
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropDown_text .dropDown.open{
+    display: block;
+}
+
+.dropDown .item {
+    padding: 4px;
+    cursor: pointer;
+    border-bottom: 1px dashed darkgrey;
+}
+
+.dropDown .item:hover {
+    background-color: #ffc46c;
 }

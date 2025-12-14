@@ -1,12 +1,5 @@
 <div class="gridContainer">
     <% instructions.forEach(instruction => { %>
-        <div class="instructionCard">
-            <p>Number: <%= instruction.number %></p> 
-            <p>Title: <%= instruction.title %></p>
-            <p><%= instruction.description %></p>
-            <a href="/admin/instructions/edit/<%= instruction._id %>">Edit</a>
-            <a href="/admin/instructions/show/<%= instruction._id %>">Show</a>
-            <a href="/admin/instructions/delete/<%= instruction._id %>">Delete</a>
-        </div>
+        <%- include("./partials/instructionCard.ejs", { instruction }) %>
     <% }); %>
 </div>

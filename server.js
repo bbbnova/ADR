@@ -1,10 +1,11 @@
 const express = require('express');
+const app = express();
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const app = express();
+const homeRouter = require('./routers/home');
 const dashboardRouter = require('./routers/admin/dashboard');
 const dataRouter = require('./routers/admin/dataRouter');
 const instructionRouter = require('./routers/admin/instructionRouter');
@@ -19,13 +20,14 @@ app.set('view engine', 'ejs');
 
 // Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json({ limit: '500000kb' }));
+app.use(express.json({ limit: '5000kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(expressLayouts);
 
 // Routes
+app.use('/', homeRouter);
 app.use('/admin/', dashboardRouter);
-app.use('/admin/exportdata', dataRouter);
+app.use('/admin/data', dataRouter);
 app.use('/admin/instructions/', instructionRouter);
 app.use('/admin/substances/', substanceRouter);
 app.use('/api/instructions/', apiInstructionRouter);

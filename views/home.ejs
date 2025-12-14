@@ -1,0 +1,79 @@
+<h1>Home</h1>
+
+<div id="substanceCombo" data-substances="<% decodeURI(atob(substances)) %>" class="dropDown_text">
+    <input id="textSubstance" class="text" type="text" autofocus>
+    <div class="dropDown">
+        <!-- <% JSON.parse(decodeURI(atob(substances))).forEach(substance => {%>
+            <div class="item" onclick="selectItem(this)" 
+                data-substance="<%= btoa(encodeURI(JSON.stringify(substance))) %>">
+                <span class="bold"><%= substance.unNumber%> </span>
+                <span><%= substance.nameBg %></span>
+            </div>
+        <%});%> -->
+    </div>
+</div>
+
+<script>
+    window.onload = () => {
+        let elm = document.querySelector("#textSubstance");
+        elm.oninput = async (event) => {
+            let dropDownElement = document.querySelector("#substanceCombo .dropDown");
+            dropDownElement.innerHTML = "";
+            if(elm.value.length > 3) {
+                
+                let substances = await loadItems(elm.value);
+                if(substances.length > 0){
+                    substances.forEach(element => {
+                        const item = document.createElement("div");
+                        item.classList.add("item");
+                        item.setAttribute("tabindex", "0");
+                        item.setAttribute("data-substance", btoa(encodeURI(JSON.stringify(element))));
+                        item.setAttribute("onclick", "selectItem(this)");
+
+                        const span1 = document.createElement("span");
+                        span1.classList.add("bold");
+                        span1.innerHTML = element.unNumber + ", ";
+                        const span2 = document.createElement("span"); 
+                        span2.innerHTML = element.nameBg;
+
+                        item.appendChild(span1);
+                        item.appendChild(span2);
+                        
+                        dropDownElement.appendChild(item)
+                    });
+                    dropDownElement.classList.add("open");
+                }
+                else {
+                    dropDownElement.classList.remove("open")
+                }
+            }
+            else {
+                dropDownElement.classList.remove("open")
+            }
+        }
+    }
+
+    async function loadItems(text) {
+        let result = await fetch("/getSubstance/"+text, {
+            method: "GET"
+        });
+
+        let substances = await result.json();
+
+        // let substances = JSON.parse(decodeURI(atob(await result.json().substances))); 
+
+        return substances;
+    }
+
+    let selectedSubstance;
+
+    async function selectItem(element) {
+        let substance = await JSON.parse(decodeURI(atob(element.dataset.substance))); 
+        selectedSubstance = substance;
+        textSubstance.value = selectedSubstance.nameBg;
+
+        let dropDownElement = document.querySelector("#substanceCombo .dropDown");
+        dropDownElement.classList.remove("open")
+        dropDownElement.innerHTML = "";
+    }
+</script>

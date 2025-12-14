@@ -1,29 +1,29 @@
 <h3>Export data</h3>
-
-
+<p>Instructions: <span style="font-weight: 900;" id="instructions"></span></p>
+<p>Substances:  <span style="font-weight: 900;" id="substances"></span></p>
+<input type="button" onclick="download(data)" value="Download">
 
 <script>
-    const download = (data) => {
-        // Create a Blob with the CSV data and type
-        const blob = new Blob([data], { type: 'application/json' });
-        
-        // Create a URL for the Blob
-        const url = URL.createObjectURL(blob);
-        
-        // Create an anchor tag for downloading
-        const a = document.createElement('a');
-        
-        // Set the URL and download attribute of the anchor tag
-        a.href = url;
-        a.download = 'data.json';
-        
-        // Trigger the download by clicking the anchor tag
-        a.click();
+    let data;
+
+    window.onload = () => {
+        data = { 
+            substances: decodeURI(atob('<%- substances %>')), 
+            instructions: decodeURI(atob('<%- instructions %>'))
+        };
+
+        document.querySelector("#instructions").innerHTML = JSON.parse(data.instructions).length;
+        document.querySelector("#substances").innerHTML = JSON.parse(data.substances).length;
     }
 
-    download(JSON.stringify({ 
-        substances: decodeURI(atob('<%- substances %>')), 
-        instructions: decodeURI(atob('<%- instructions %>'))
-    }));
-    
+    const download = (data) => {
+        
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.json';
+        a.click();
+    }    
 </script>

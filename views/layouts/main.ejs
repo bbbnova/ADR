@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include("../partials/headStandart.ejs")  %>
-    <%- include("../partials/headEditor.ejs")  %>
+    <title><%= typeof title !== 'undefined' ? title : 'ADR Опасни товари' %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/ckeditor/ckeditor5/ckeditor5.css">  
 </head>
 <body>
-    <header>
-        <h1>Welcome to <a href="/"><%= title %></a></h1>
-    </header>
+    <div class="header">
+        <p>Welcome to <a href="/"><%= title %></a></p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2026 My App. All rights reserved.</p>
+    </div>
 
-    <main>
+    <div class="main">
         <%- body %>
-    </main>
+    </div>    
 
-    <footer>
-        <p>&copy; 2024 My App. All rights reserved.</p>
-    </footer>
-
-    <script src="/js/script.js"></script>
+    <!-- <script src="/js/script.js"></script> -->
 </body>
 </html>
