@@ -94,8 +94,70 @@ button:hover { background: #0256c7; }
 .editor-container, #content { width: 795px; margin-left: auto; margin-right: auto; }
 
 
+
+
+
+.searchContainer {
+    font-size: 16pt;
+    margin: 20px auto;
+    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;    
+    justify-items: left;
+    align-items: top;
+}
+
+#substanceCombo {
+    grid-row: 1;
+    grid-column: 1 / span 2;
+}
+
+.unNumber {
+    font-size: 14pt;
+    grid-row: 1;
+    grid-column: 3;
+    align-content: self-center;
+}
+
+.nameBg {
+    grid-row: 2;
+    grid-column: 1 / span 3;
+}
+
+.nameEn {
+    grid-row: 3;
+    grid-column: 1 / span 3;
+}
+
+.description {
+    grid-row: 4;
+    grid-column: 1 / span 3;
+}
+
+.imagesContainer {
+    grid-row: 5;
+    grid-column: 1 / span 2;
+}
+
+.hazardClass {
+    display: inline-block;
+    grid-row: 5;
+    grid-column: 3;
+}
+
+.dangerNumber {
+    grid-row: 6;
+    grid-column: 1;
+}
+
+.dangers {
+    grid-row: 6;
+    grid-column: 2 / span 2;
+}
+
 .dropDown_text {
-    width: 300px;
+    width: 100%;
     display: inline-block;
 }
 
@@ -126,4 +188,15 @@ button:hover { background: #0256c7; }
 
 .dropDown .item:hover {
     background-color: #ffc46c;
+}
+
+.plateImage {
+    display: inline;
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}
+
+.hidden {
+    display: none;
 }

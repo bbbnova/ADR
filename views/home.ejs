@@ -1,21 +1,52 @@
 <h1>Home</h1>
 
-<div id="substanceCombo" data-substances="<% decodeURI(atob(substances)) %>" class="dropDown_text">
-    <input id="textSubstance" class="text" type="text" autofocus>
-    <div class="dropDown">
-        <!-- <% JSON.parse(decodeURI(atob(substances))).forEach(substance => {%>
-            <div class="item" onclick="selectItem(this)" 
-                data-substance="<%= btoa(encodeURI(JSON.stringify(substance))) %>">
-                <span class="bold"><%= substance.unNumber%> </span>
-                <span><%= substance.nameBg %></span>
-            </div>
-        <%});%> -->
+<div class="searchContainer">
+    <div id="substanceCombo" data-substances="<% decodeURI(atob(substances)) %>" class="dropDown_text">
+        <input id="textSubstance" class="text" type="text" autofocus>
+        <div class="dropDown">
+        </div>
     </div>
+    <div class="nameBg">
+        <span id="nameBg"></span>
+    </div>
+    <div class="unNumber">
+        <span>код по ООН:</span>
+        <span id="unNumber"></span>
+    </div>
+    <div class="hazardClass">
+        <span>Клас:</span>
+        <span id="hazardClass"></span>
+    </div>
+    <div class="dangerNumber">
+        <span>Код на опасност:</span>
+        <span id="dangerNumber"></span>
+    </div>
+    <div class="dangers">
+        <span>Опасности:</span>
+        <span id="dangers"></span>
+    </div>
+    <div class="nameEn">
+        <span id="nameEn"></span>
+    </div>
+    <div class="plate">
+        <div class="images">            
+        </div>
+    </div>
+    <div class="description">
+        <span>Описание:</span>
+        <span id="description"></span>
+    </div>
+    <div class="polimerization">Склонност към полимеризация</div>
+    <div class="reactsWithWater">Реагира с вода</div>
+    <div class="reactionProduct"><span>Продукт на реакцията: </span><span class="name"></span></div>
+
 </div>
 
-<script>
+<script src="/modules/imageCodes.js"></script>
+<script >   
+
     window.onload = () => {
-        let elm = document.querySelector("#textSubstance");
+        let elm = document.querySelector("#substanceCombo .text");
         elm.oninput = async (event) => {
             let dropDownElement = document.querySelector("#substanceCombo .dropDown");
             dropDownElement.innerHTML = "";
@@ -54,26 +85,111 @@
     }
 
     async function loadItems(text) {
-        let result = await fetch("/getSubstance/"+text, {
-            method: "GET"
-        });
-
-        let substances = await result.json();
-
-        // let substances = JSON.parse(decodeURI(atob(await result.json().substances))); 
-
-        return substances;
+        try {
+            let result = await fetch("/getSubstance/"+text, {
+                method: "GET"
+            });
+            let substances = await result.json();
+            substances = decodeURI(atob(substances.substances));
+            substances = JSON.parse(substances);
+            return substances;
+        }
+        catch (error) {
+            console.error("Error loading substances:", error);
+            return [];
+        }
     }
 
     let selectedSubstance;
 
     async function selectItem(element) {
         let substance = await JSON.parse(decodeURI(atob(element.dataset.substance))); 
-        selectedSubstance = substance;
-        textSubstance.value = selectedSubstance.nameBg;
-
+        setSelectedSubstance(substance);
         let dropDownElement = document.querySelector("#substanceCombo .dropDown");
         dropDownElement.classList.remove("open")
         dropDownElement.innerHTML = "";
     }
+
+    function setSelectedSubstance(substance) {
+        selectedSubstance = substance;       
+        document.querySelector("#nameBg").innerHTML = selectedSubstance.nameBg;
+        document.querySelector("#nameEn").innerHTML = selectedSubstance.nameEn;
+        document.querySelector("#unNumber").innerHTML = selectedSubstance.unNumber;
+        if(selectedSubstance.description !== null && selectedSubstance.description !== 'undefined') {
+            document.querySelector(".description").classList.remove('hidden');            
+            document.querySelector("#description").innerHTML = selectedSubstance.description;
+        } else {
+            document.querySelector(".description").classList.add('hidden');
+            document.querySelector("#description").innerHTML = "";
+        }
+        
+        document.querySelector("#hazardClass").innerHTML = selectedSubstance.hazardClass;
+
+        document.querySelector("#dangerNumber").innerHTML = selectedSubstance.dangerNumber;
+        //fill from array
+        //document.querySelector("#dangers").innerHTML = selectedSubstance.dangers.join(", ");
+        
+        if(selectedSubstance.reactsWithWater && selectedSubstance.reactionProduct !== null && selectedSubstance.reactionProduct !== 'undefined') {
+            document.querySelector(".reactsWithWater").classList.remove("hidden");
+            document.querySelector(".reactionProduct").classList.remove("hidden");
+            document.querySelector(".reactionProduct .name").innerHTML = selectedSubstance.reactionProduct;
+        } else {
+            document.querySelector(".reactsWithWater").classList.add("hidden");
+            document.querySelector(".reactionProduct").classList.add("hidden");
+            document.querySelector(".reactionProduct .name").innerHTML = ""
+        }
+
+        if(selectedSubstance.reactsWithWater) {
+            document.querySelector(".polimerization").classList.remove("hidden"); 
+        } else {
+            document.querySelector(".polimerization").classList.add("hidden");
+        }
+        
+        document.querySelector("#substanceCombo .text").value = selectedSubstance.nameBg;
+        let imgs = [];
+        fillImages(imgs, selectedSubstance);
+        document.querySelector(".plate .images").innerHTML = "";
+        imgs.forEach(img => {
+            let imgElement = document.createElement("img");
+            imgElement.src = "/img/plates/" + img;
+            imgElement.alt = selectedSubstance.nameBg;
+            imgElement.classList.add("plateImage");
+            document.querySelector(".plate .images").appendChild(imgElement);
+        }); 
+    }
+
+    function fillImages(imgs, substance) {
+        imageCodes.forEach(code => {
+            if(code.class === substance.hazardClass && code.class.length > 1) {
+                imgs.push(code.image)
+            }
+
+            if(code.class === substance.hazardClass && code.class.length === 1) {
+                if(substance.hazardSubclass.includes(code.subclass)){
+                    imgs.push(code.image)
+                }
+            }
+        });
+    }
+
+    /*
+    substances.forEach(substance => {
+            let imgs = [];
+            fillImages(imgs, substance);
+            substance.imgs = imgs;
+        });
+    function fillImages(imgs, substance) {
+        ImageCodes.forEach(code => {
+            if(code.class === substance.hazardClass && code.class.length > 1) {
+                imgs.push(code.image)
+            }
+
+            if(code.class === substance.hazardClass && code.class.length === 1) {
+                if(substance.hazardSubclass.includes(code.subclass)){
+                    imgs.push(code.image)
+                }
+            }
+        });
+    }
+    */
 </script>

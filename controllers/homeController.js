@@ -1,6 +1,7 @@
 const Instruction = require('../models/instructionModel');
 const Substance = require('../models/substanceModel');
 
+
 const getHomePage = async (req, res) => {
     try {
         let substances = await Substance.find({}).limit(30).populate("instruction");
@@ -19,11 +20,13 @@ const getSubstance = async (req, res) => {
         
         let substances = await Substance.find(
             {
-                $or: [{unNumber: req.params.text.toString()}, {nameBg: {$regex : req.params.text, $options: 'i'}}]
+                $or: [{unNumber: req.params.text.toString()}, 
+                    {nameBg: {$regex : req.params.text, $options: 'i'}}]
             }
         );
         
-        res.status(200).json(substances);
+        substances = btoa(encodeURI(JSON.stringify(substances)));
+        res.status(200).json({substances: substances});
     } catch(err) {
         console.log(err);
         res.sendStatus(500);
