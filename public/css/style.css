@@ -95,70 +95,37 @@ button:hover { background: #0256c7; }
 
 
 
-
+h3 {
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
 
 .searchContainer {
-    font-size: 16pt;
-    margin: 20px auto;
-    max-width: 800px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;    
+    font-size: 14pt;
+    margin: 0px auto 20px 20px;
+    display: -ms-inline-grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
     justify-items: left;
     align-items: top;
+    grid-template-areas: 'substanceCombo substanceCombo substanceCombo'
+                         'nameBg nameBg nameBg'
+                         'nameEn nameEn nameEn'
+                         'description description description'
+                         'hazardClass hazardClass hazardClass'  
+                         'unNumber unNumber unNumber'
+                         'dangerNumber dangers dangers'
+                         'imagesContainer imagesContainer imagesContainer'
+                         'dangerAnotations dangerAnotations dangerAnotations';
 }
 
 #substanceCombo {
-    grid-row: 1;
-    grid-column: 1 / span 2;
-}
-
-.unNumber {
-    font-size: 14pt;
-    grid-row: 1;
-    grid-column: 3;
-    align-content: self-center;
-}
-
-.nameBg {
-    grid-row: 2;
-    grid-column: 1 / span 3;
-}
-
-.nameEn {
-    grid-row: 3;
-    grid-column: 1 / span 3;
-}
-
-.description {
-    grid-row: 4;
-    grid-column: 1 / span 3;
-}
-
-.imagesContainer {
-    grid-row: 5;
-    grid-column: 1 / span 2;
-}
-
-.hazardClass {
-    display: inline-block;
-    grid-row: 5;
-    grid-column: 3;
-}
-
-.dangerNumber {
-    grid-row: 6;
-    grid-column: 1;
-}
-
-.dangers {
-    grid-row: 6;
-    grid-column: 2 / span 2;
+    grid-area: substanceCombo;
 }
 
 .dropDown_text {
-    width: 100%;
-    display: inline-block;
+    position: relative;
+    display: block;
 }
 
 .dropDown_text .text {
@@ -169,11 +136,13 @@ button:hover { background: #0256c7; }
 
 .dropDown_text .dropDown{
     display: none;
+    position: absolute;
     margin-top: 1px;
     padding: 3px;
     border: 1px grey solid; 
     max-height: 300px;
     overflow-y: auto;
+    background-color: white;
 }
 
 .dropDown_text .dropDown.open{
@@ -190,11 +159,95 @@ button:hover { background: #0256c7; }
     background-color: #ffc46c;
 }
 
+.unNumber {
+    margin-top: 10px;
+    grid-area: unNumber;
+}
+
+.nameBg {
+    margin-top: 10px;
+    grid-area: nameBg;
+}
+
+.nameEn {
+    margin-top: 10px;
+    grid-area: nameEn;
+}
+
+.description {
+    margin-top: 10px;
+    grid-area: description;
+}
+
+.imagesContainer {
+    margin-top: 10px;
+    grid-area: imagesContainer;
+}
+
 .plateImage {
     display: inline;
     width: 100px;
     height: 100px;
     margin-right: 10px;
+}
+
+.hazardClass {
+    margin-top: 10px;
+    grid-area: hazardClass;
+}
+
+.dangerNumber {
+    margin-top: 10px;
+    grid-area: dangerNumber;
+}
+
+.dangers {    
+    background-color: #ffc46c;
+    font-weight: 900;
+    margin-top: 10px;
+    grid-area: dangers;
+    padding: 5px;
+}
+
+.dangerAnotations {
+    margin-top: 10px;
+    grid-area: dangerAnotations;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.polimerization{
+    width: 120px;
+    height: 100px;
+    background-color: rgb(0, 8, 162);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+    word-wrap: break-word;
+}
+
+.reactsWithWater{
+    width: 120px;
+    height: 100px;
+    background-color: rgb(178, 65, 65);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.reactionProduct{
+    width: 120px;
+    height: 100px;
+    background-color: rgb(34, 139, 34);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+    display: inline-block;
 }
 
 .hidden {

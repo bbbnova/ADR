@@ -107,5 +107,3 @@ const hazardCodes = [
     { number: "90", description: "Екологично опасно вещество; различни опасни вещества" },
     { number: "99", description: "Разни опасни вещества, превозвани при повишена температура" }
 ];
-
-module.exports = { hazardCodes }

@@ -1,4 +1,4 @@
-<h1>Home</h1>
+<h3>Търсене по наименование или код по ООН</h3>
 
 <div class="searchContainer">
     <div id="substanceCombo" data-substances="<% decodeURI(atob(substances)) %>" class="dropDown_text">
@@ -9,40 +9,43 @@
     <div class="nameBg">
         <span id="nameBg"></span>
     </div>
+    <div class="nameEn">
+        <span id="nameEn"></span>
+    </div>
     <div class="unNumber">
-        <span>код по ООН:</span>
+        <span>Код по ООН:</span>
         <span id="unNumber"></span>
     </div>
     <div class="hazardClass">
         <span>Клас:</span>
         <span id="hazardClass"></span>
     </div>
-    <div class="dangerNumber">
+    <div class="dangerNumber hidden">
         <span>Код на опасност:</span>
         <span id="dangerNumber"></span>
     </div>
-    <div class="dangers">
-        <span>Опасности:</span>
+    <div class="dangers hidden">
         <span id="dangers"></span>
     </div>
-    <div class="nameEn">
-        <span id="nameEn"></span>
-    </div>
-    <div class="plate">
+    <div class="imagesContainer">
         <div class="images">            
         </div>
     </div>
-    <div class="description">
+    <div class="description hidden">
         <span>Описание:</span>
         <span id="description"></span>
     </div>
-    <div class="polimerization">Склонност към полимеризация</div>
-    <div class="reactsWithWater">Реагира с вода</div>
-    <div class="reactionProduct"><span>Продукт на реакцията: </span><span class="name"></span></div>
+    <div class="dangerAnotations">
+        <div class="polimerization hidden"><span>Склонност към полимеризация</span></div>
+        <div class="reactsWithWater hidden"><span>Реагира с вода</span></div>
+        <div class="reactionProduct hidden"><span>Продукт на реакцията: </span><span class="name"></span></div>
+    </div>
+    
 
 </div>
 
 <script src="/modules/imageCodes.js"></script>
+<script src="/modules/hazardCodes.js"></script>
 <script >   
 
     window.onload = () => {
@@ -112,10 +115,17 @@
 
     function setSelectedSubstance(substance) {
         selectedSubstance = substance;       
-        document.querySelector("#nameBg").innerHTML = selectedSubstance.nameBg;
+        if(typeof selectedSubstance.nameBg !== 'undefined' && selectedSubstance.nameBg !== null) {
+            document.querySelector("#nameBg").classList.remove('hidden');
+            document.querySelector("#nameBg").innerHTML = selectedSubstance.nameBg;
+        } else {
+            document.querySelector("#nameBg").classList.add('hidden');
+            document.querySelector("#nameBg").innerHTML = '';
+        }
+        
         document.querySelector("#nameEn").innerHTML = selectedSubstance.nameEn;
         document.querySelector("#unNumber").innerHTML = selectedSubstance.unNumber;
-        if(selectedSubstance.description !== null && selectedSubstance.description !== 'undefined') {
+        if(selectedSubstance.description !== null && typeof selectedSubstance.description !== 'undefined') {
             document.querySelector(".description").classList.remove('hidden');            
             document.querySelector("#description").innerHTML = selectedSubstance.description;
         } else {
@@ -125,11 +135,22 @@
         
         document.querySelector("#hazardClass").innerHTML = selectedSubstance.hazardClass;
 
-        document.querySelector("#dangerNumber").innerHTML = selectedSubstance.dangerNumber;
-        //fill from array
-        //document.querySelector("#dangers").innerHTML = selectedSubstance.dangers.join(", ");
+        if(selectedSubstance.dangerNumber !== null && typeof selectedSubstance.dangerNumber !== 'undefined') {
+            document.querySelector(".dangerNumber").classList.remove('hidden');   
+            document.querySelector("#dangerNumber").innerHTML = selectedSubstance.dangerNumber;   
+            document.querySelector(".dangers").classList.remove('hidden');
+            document.querySelector("#dangers").innerHTML = getHazardDescription(selectedSubstance.dangerNumber);
+        } else {
+            document.querySelector(".dangerNumber").classList.add('hidden');
+            document.querySelector("#dangerNumber").innerHTML = '';
+            document.querySelector(".dangers").classList.add('hidden');
+            document.querySelector("#dangers").innerHTML = '';
+        }
         
-        if(selectedSubstance.reactsWithWater && selectedSubstance.reactionProduct !== null && selectedSubstance.reactionProduct !== 'undefined') {
+        
+        if(selectedSubstance.reactsWithWater && 
+        selectedSubstance.reactionProduct !== null && 
+        typeof selectedSubstance.reactionProduct !== 'undefined') {
             document.querySelector(".reactsWithWater").classList.remove("hidden");
             document.querySelector(".reactionProduct").classList.remove("hidden");
             document.querySelector(".reactionProduct .name").innerHTML = selectedSubstance.reactionProduct;
@@ -148,13 +169,13 @@
         document.querySelector("#substanceCombo .text").value = selectedSubstance.nameBg;
         let imgs = [];
         fillImages(imgs, selectedSubstance);
-        document.querySelector(".plate .images").innerHTML = "";
+        document.querySelector(".imagesContainer .images").innerHTML = "";
         imgs.forEach(img => {
             let imgElement = document.createElement("img");
             imgElement.src = "/img/plates/" + img;
             imgElement.alt = selectedSubstance.nameBg;
             imgElement.classList.add("plateImage");
-            document.querySelector(".plate .images").appendChild(imgElement);
+            document.querySelector(".imagesContainer .images").appendChild(imgElement);
         }); 
     }
 
@@ -170,6 +191,18 @@
                 }
             }
         });
+    }
+
+    function getHazardDescription(hazardCode) {
+        let description = "";
+        hazardCodes.forEach(code => {
+            if(code.number === hazardCode) {
+                description = code.description;
+                console.log("Found hazard code:", code);
+            } 
+        });
+
+        return description;
     }
 
     /*
