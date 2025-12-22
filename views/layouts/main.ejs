@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><%= typeof title !== 'undefined' ? title : 'ADR Опасни товари' %></title>
+    <title><%= typeof title !== 'undefined' ? title : 'Сборник инструкции за действие при инциденти с опасни товари' %></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
@@ -9,10 +9,16 @@
 </head>
 <body>
     <div class="header">
-        <p>Welcome to <a href="/"><%= title %></a></p>
+        <h1>Сборник инструкции за действие при инциденти с опасни товари</h1>
+        <nav>
+            <span>Търси по: </span>
+            <a href="/">Наименование или ООН номер на в-во</a> |
+            <a href="/search/plate">Табели</a> |
+            <a href="/search/dangerNumber">Код на опасност</a>
+        </nav>
     </div>
     <div class="footer">
-        <p>&copy; 2026 My App. All rights reserved.</p>
+        <p>&copy; 2026 Действие при инциденти с опасни товари</p>
     </div>
 
     <div class="main">

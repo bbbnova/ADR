@@ -4,12 +4,21 @@
     <title><%= typeof title !== 'undefined' ? title : 'ADR Опасни товари' %></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <link rel="stylesheet" href="/ckeditor/ckeditor5/ckeditor5.css"> 
 </head>
 <body>
     <div class="header">
-        <h1>Welcome to <a href="/admin"><%= title %></a></h1>
+        <h1>ADR dashboard</h1>
+        <nav>
+            <a href="/">Search</a> |
+            <a href="/admin">Dashboard</a> |
+            <a href="/admin/substances">Substances</a> |
+            <a href="/admin/instructions">Instructions</a> |
+            <a href="/admin/users">Users</a> |
+            <a href="/admin/settings">Settings</a> |
+            <a href="/logout">Logout</a>
+        </nav>
     </div>
     <div class="footer">
         <p>&copy; 2024 My App. All rights reserved.</p>

@@ -1,0 +1,144 @@
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e3e3e3;
+    height: 100vh;
+}
+
+.header, .footer {
+    background: #ce8e8e;
+    color: #470000;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.header {
+    grid-row: 1;
+}
+
+.header a, .header a:visited {
+    color: #470000;
+    text-decoration: none;
+}
+
+.header a:hover {
+    color: #fff1f1;
+}
+
+.footer {
+    grid-row: 3;
+}
+
+.main {
+    grid-row: 2;
+    overflow-y: scroll;
+}
+
+h1 {
+    margin: 0 0 5px 0;
+}
+
+.dashboardContainer {
+    display: inline-block;
+    padding: 20px;
+}
+
+.dashboardContainer > div {
+    margin-bottom: 5px;
+    padding: 5px;
+    font-size: 14pt;
+}
+
+.dashboardContainer div {
+    pointer-events: none;
+}
+
+.dashboardContainer a, .dashboardContainer a:visited {
+    text-decoration: none;
+    color: #470000;
+    pointer-events: auto;
+}
+
+
+
+.dashboardContainer div:hover {
+    background-color: #470000;
+}
+
+.dashboardContainer a:hover {
+    /* background-color: #470000; */
+    color: #ffffff;
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.instructionCard {
+    background: #ffebcd;
+    border: 1px solid #ffc46c;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.substanceCard {
+    background: rgb(228, 228, 228);
+    border: 0px solid rgb(145, 145, 145);
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.substanceCard p {
+    padding: 0 10px;
+    margin: 5px 5px;
+    word-break: break-all;
+}
+
+.substanceCard .reactsWithWater {
+    color: white;
+    padding: 10px;
+    background-color: rgb(178, 65, 65);
+}
+
+.substanceCard .polimerization {
+    color: white;
+    padding: 10px;
+    background-color: rgb(0, 8, 162);
+}
+
+.substanceCard .isToxic {
+    color: white;
+    padding: 10px;
+    background-color: rgb(54, 54, 54);
+}
+
+.image img{
+    display: inline;
+    width: 100px;
+    height: 100px;
+}
+
+/* editing fields */
+.container { max-width: 800px; margin: 20px auto; }
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 5px; font-weight: bold; }
+input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
+#editor { height: 300px; }
+button { padding: 10px 20px; background: #0366d6; color: white; border: none; cursor: pointer; }
+button:hover { background: #0256c7; }
+.editor-container, #content { max-width: 800px; margin-left: auto; margin-right: auto; padding: 5px;}
+ 
+
+.hidden {
+    display: none;
+}

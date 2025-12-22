@@ -2,85 +2,47 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #e3e3e3;
     height: 100vh;
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
 }
 
+.header a, .header a:visited {
+    color: #fff0d3;
+    text-decoration: none;
+}
+
 .header, .footer {
-    background: #35424a;
-    color: #ffffff;
-    padding: 10px 0;
+    background: #5c5c5c;
+    color: #f5f5f5;
+    padding: 0;
     text-align: center;
     width: 100%;
 }
 
 .header {
     grid-row: 1;
+    padding-bottom: 10px;
 }
 
 .footer {
     grid-row: 3;
 }
 
+.header a, .header a:visited {
+    color: #ffa600;
+    text-decoration: none;
+}
+
+.header a:hover {
+    color: #fff1f1;
+}
+
 .main {
     grid-row: 2;
     overflow-y: auto;
-}
-
-.gridContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.instructionCard {
-    background: #ffebcd;
-    border: 1px solid #ffc46c;
-    border-radius: 5px;
-    padding: 15px;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
-}
-
-.substanceCard {
-    background: rgb(228, 228, 228);
-    border: 0px solid rgb(145, 145, 145);
-    border-radius: 5px;
-    padding: 15px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
-
-.substanceCard p {
-    padding: 0 10px;
-    margin: 5px 5px;
-    word-break: break-all;
-}
-
-.substanceCard .reactsWithWater {
-    color: white;
-    padding: 10px;
-    background-color: rgb(178, 65, 65);
-}
-
-.substanceCard .polimerization {
-    color: white;
-    padding: 10px;
-    background-color: rgb(0, 8, 162);
-}
-
-.substanceCard .isToxic {
-    color: white;
-    padding: 10px;
-    background-color: rgb(54, 54, 54);
-}
-
-.image img{
-    display: inline;
-    width: 100px;
-    height: 100px;
 }
 
 /* editing fields */
@@ -91,9 +53,11 @@ input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
 #editor { height: 300px; }
 button { padding: 10px 20px; background: #0366d6; color: white; border: none; cursor: pointer; }
 button:hover { background: #0256c7; }
-.editor-container, #content { width: 795px; margin-left: auto; margin-right: auto; }
+.editor-container, #content { max-width: 800px; margin-left: auto; margin-right: auto; padding: 5px;}
 
-
+h1 {
+    margin: 5px;
+}
 
 h3 {
     margin-left: 20px;
@@ -102,7 +66,7 @@ h3 {
 
 .searchContainer {
     font-size: 14pt;
-    margin: 0px auto 20px 20px;
+    margin: 0px 20px 20px 20px;
     display: -ms-inline-grid;
     grid-template-columns: auto auto auto;
     gap: 10px;
