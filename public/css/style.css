@@ -80,7 +80,9 @@ h3 {
                          'unNumber unNumber unNumber'
                          'dangerNumber dangers dangers'
                          'imagesContainer imagesContainer imagesContainer'
-                         'dangerAnotations dangerAnotations dangerAnotations';
+                         'dangerAnotations dangerAnotations dangerAnotations'
+                         'distances distances distances'
+                         'instruction instruction instruction';
 }
 
 #substanceCombo {
@@ -213,6 +215,95 @@ h3 {
     margin-right: 5px;
     display: inline-block;
 }
+.distances {    
+    grid-area: distances;
+}
+
+.distances h4 {
+    background-color: green;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.distanceTable {
+    display: grid;
+    border-collapse: collapse;
+    width: 100%;
+    grid-template-areas: 'header initialDistanceHeader dayDistanceHeader nightDistanceHeader'
+                         'smallLeakHeader initialDistanceS dayDistanceS nightDistanceS'
+                         'bigLeakHeader initialDistanceL dayDistanceL nightDistanceL';
+}
+
+.theader {
+    background-color: #c8c8c8;
+    font-weight: bold;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.smallLeakHeader {
+    grid-area: smallLeakHeader;
+}
+
+.bigLeakHeader {
+    grid-area: bigLeakHeader;
+}
+
+.initialDistanceHeader {
+    grid-area: initialDistanceHeader;
+}
+
+.dayDistanceHeader {
+    grid-area: dayDistanceHeader;
+}
+
+.nightDistanceHeader {
+    grid-area: nightDistanceHeader;
+    background-color: #313131;
+    color: white;
+}
+
+.distanceTable div {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.smallLeak.initialDistance{
+    grid-area: initialDistanceS;
+}
+
+.smallLeak.dayDistance{
+    grid-area: dayDistanceS;
+}
+
+.smallLeak.nightDistance{
+    grid-area: nightDistanceS;
+    background-color: #5c5c5c;
+    color:white;
+}
+
+.bigLeak.initialDistance{
+    grid-area: initialDistanceL;
+}
+
+.bigLeak.dayDistance{
+    grid-area: dayDistanceL;
+}
+
+.bigLeak.nightDistance{
+    grid-area: nightDistanceL;
+    background-color: #5c5c5c;
+    color:white;
+}
+
+.instruction {
+    grid-area: instruction;
+    max-width: 800px;
+    padding: 10px;
+}
+
 
 .hidden {
     display: none;

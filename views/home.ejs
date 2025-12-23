@@ -40,7 +40,26 @@
         <div class="reactsWithWater hidden"><span>Реагира с вода</span></div>
         <div class="reactionProduct hidden"><span>Продукт на реакцията: </span><span class="name"></span></div>
     </div>
-    
+    <div class="distances hidden">
+        <h4>Евакуация при инцидент с изтичане</h4>
+        <div class="distanceTable">
+            <div class="theader smallLeakHeader">Малък разлив (м)</div>
+            <div class="theader bigLeakHeader">Голям разлив (м)</div>
+            <div class="theader initialDistanceHeader">Първоначално</div>
+            <div class="theader dayDistanceHeader">Денем</div>
+            <div class="theader nightDistanceHeader">Нощем</div>            
+            <div class="smallLeak initialDistance"></div>
+            <div class="smallLeak dayDistance"></div>
+            <div class="smallLeak nightDistance"></div>
+            <div class="bigLeak initialDistance"></div>
+            <div class="bigLeak dayDistance"></div>
+            <div class="bigLeak nightDistance"></div>
+        </div>
+    </div>
+    <div class="instruction hidden">
+        <h4 class="description">ИНСТРУКЦИЯ</h4>
+        <div id="content" class="ck-content"></div>
+    </div>
 
 </div>
 
@@ -103,6 +122,20 @@
         }
     }
 
+    async function loadInstruction(text) {
+        try {
+            let result = await fetch("/getInstruction/"+text, {
+                method: "GET"
+            });
+            let instruction = await result.json();
+            return instruction;
+        }
+        catch (error) {
+            console.error("Error loading instruction:", error);
+            return [];
+        }
+    }
+
     let selectedSubstance;
 
     async function selectItem(element) {
@@ -111,7 +144,26 @@
         let dropDownElement = document.querySelector("#substanceCombo .dropDown");
         dropDownElement.classList.remove("open")
         dropDownElement.innerHTML = "";
+
+        let instruction = await loadInstruction(substance.instruction); 
+        let content = decodeHtml(decodeURIComponent(atob(instruction.content))); 
+        
+        if(instruction !== null && typeof instruction !== 'undefined') {
+            document.querySelector(".instruction #content").innerHTML = content;
+            document.querySelector(".instruction .description").innerHTML = instruction.description;
+            document.querySelector(".instruction").classList.remove("hidden");
+        } else {
+            document.querySelector(".instruction #content").innerHTML = "";
+            document.querySelector(".instruction .description").innerHTML = "";
+            document.querySelector(".instruction").classList.add("hidden"); 
+        }
     }
+    
+    const decodeHtml = (html) => {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    };
 
     function setSelectedSubstance(substance) {
         selectedSubstance = substance;       
@@ -176,7 +228,25 @@
             imgElement.alt = selectedSubstance.nameBg;
             imgElement.classList.add("plateImage");
             document.querySelector(".imagesContainer .images").appendChild(imgElement);
-        }); 
+        });
+
+        if(selectedSubstance.isToxic) {
+            document.querySelector(".distances").classList.remove("hidden");
+            document.querySelector(".smallLeak.initialDistance").innerHTML = selectedSubstance.smallSpillInitialIsolationDistance.$numberDecimal;
+            document.querySelector(".smallLeak.dayDistance").innerHTML = selectedSubstance.smallSpillProtectiveActionDayDistance.$numberDecimal;
+            document.querySelector(".smallLeak.nightDistance").innerHTML = selectedSubstance.smallSpillProtectiveActionNightDistance.$numberDecimal;
+            document.querySelector(".bigLeak.initialDistance").innerHTML = selectedSubstance.largeSpillInitialIsolationDistance.$numberDecimal;
+            document.querySelector(".bigLeak.dayDistance").innerHTML = selectedSubstance.largeSpillProtectiveActionDayDistance.$numberDecimal;
+            document.querySelector(".bigLeak.nightDistance").innerHTML = selectedSubstance.largeSpillProtectiveActionNightDistance.$numberDecimal;
+        } else {
+            document.querySelector(".distances").classList.add("hidden");
+            document.querySelector(".smallLeak.initialDistance").innerHTML = "";
+            document.querySelector(".smallLeak.dayDistance").innerHTML = "";
+            document.querySelector(".smallLeak.nightDistance").innerHTML = "";
+            document.querySelector(".bigLeak.initialDistance").innerHTML = "";
+            document.querySelector(".bigLeak.dayDistance").innerHTML = "";
+            document.querySelector(".bigLeak.nightDistance").innerHTML = "";
+        }
     }
 
     function fillImages(imgs, substance) {
@@ -198,7 +268,6 @@
         hazardCodes.forEach(code => {
             if(code.number === hazardCode) {
                 description = code.description;
-                console.log("Found hazard code:", code);
             } 
         });
 

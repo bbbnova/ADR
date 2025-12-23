@@ -33,7 +33,22 @@ const getSubstance = async (req, res) => {
     }
 }
 
+const getInstruction = async (req, res) => {
+    try {        
+        let instruction = await Instruction.findOne(
+            {
+                _id: req.params.text.toString()
+            }
+        );
+        res.status(200).json(instruction);
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+}
+
 module.exports = {
     getHomePage,
-    getSubstance
+    getSubstance,
+    getInstruction
 }
