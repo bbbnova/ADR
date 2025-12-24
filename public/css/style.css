@@ -32,7 +32,7 @@ body {
 }
 
 .header a, .header a:visited {
-    color: #ffa600;
+    color: #e6994c;
     text-decoration: none;
 }
 
@@ -46,14 +46,14 @@ body {
 }
 
 /* editing fields */
-.container { max-width: 800px; margin: 20px auto; }
+/* .container { max-width: 800px; margin: 20px auto; }
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 5px; font-weight: bold; }
 input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
 #editor { height: 300px; }
 button { padding: 10px 20px; background: #0366d6; color: white; border: none; cursor: pointer; }
 button:hover { background: #0256c7; }
-.editor-container, #content { max-width: 800px; margin-left: auto; margin-right: auto; padding: 5px;}
+.editor-container, #content { max-width: 800px; margin-left: auto; margin-right: auto; padding: 5px;} */
 
 h1 {
     margin: 5px;
@@ -65,6 +65,7 @@ h3 {
 }
 
 .searchContainer {
+    max-width: 800px;
     font-size: 14pt;
     margin: 0px 20px 20px 20px;
     display: -ms-inline-grid;
@@ -72,7 +73,8 @@ h3 {
     gap: 10px;
     justify-items: left;
     align-items: top;
-    grid-template-areas: 'substanceCombo substanceCombo substanceCombo'
+    grid-template-areas: 'title title title'
+                         'substanceCombo substanceCombo substanceCombo'
                          'nameBg nameBg nameBg'
                          'nameEn nameEn nameEn'
                          'description description description'
@@ -85,8 +87,21 @@ h3 {
                          'instruction instruction instruction';
 }
 
+.searchContainer h3 {
+    grid-area: title;
+    margin: 20px 0 5px 0;
+}
+
 #substanceCombo {
     grid-area: substanceCombo;
+    width: 100%;
+}
+
+.dropDown_text .text {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14pt;
+    padding: 5px;
 }
 
 .dropDown_text {
@@ -126,13 +141,23 @@ h3 {
 }
 
 .unNumber {
+    font-size: 14pt;
     margin-top: 10px;
     grid-area: unNumber;
 }
 
-.nameBg {
+.unNumber #unNumber {
+    font-weight: 900;
+}
+
+.nameBg {    
+    font-size: 14pt;
     margin-top: 10px;
     grid-area: nameBg;
+}
+
+.nameBg span {
+    font-weight: 900;
 }
 
 .nameEn {
@@ -162,15 +187,22 @@ h3 {
     grid-area: hazardClass;
 }
 
+.hazardClass #hazardClass {
+    font-weight: 900;
+}
+
 .dangerNumber {
     margin-top: 10px;
     grid-area: dangerNumber;
 }
 
-.dangers {    
-    background-color: #ffc46c;
+.dangerNumber #dangerNumber {
     font-weight: 900;
-    margin-top: 10px;
+}
+
+.dangers {    
+    background-color: #e6994c;
+    font-weight: 900;
     grid-area: dangers;
     padding: 5px;
 }
@@ -197,7 +229,7 @@ h3 {
 .reactsWithWater{
     width: 120px;
     height: 100px;
-    background-color: rgb(178, 65, 65);
+    background-color: #b24141;
     color: white;
     padding: 5px;
     border-radius: 5px;
@@ -301,7 +333,11 @@ h3 {
 .instruction {
     grid-area: instruction;
     max-width: 800px;
-    padding: 10px;
+}
+
+.instruction .description {
+    background-color: orange;
+    padding: 5px;
 }
 
 

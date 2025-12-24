@@ -1,6 +1,7 @@
-<h3>Търсене по наименование или код по ООН</h3>
+
 
 <div class="searchContainer">
+    <h3>Търсене по наименование или код по ООН</h3>
     <div id="substanceCombo" data-substances="<% decodeURI(atob(substances)) %>" class="dropDown_text">
         <input id="textSubstance" class="text" type="text" autofocus>
         <div class="dropDown">
@@ -58,7 +59,7 @@
     </div>
     <div class="instruction hidden">
         <h4 class="description">ИНСТРУКЦИЯ</h4>
-        <div id="content" class="ck-content"></div>
+        <%- include("./partials/content.ejs")  %>
     </div>
 
 </div>
