@@ -15,6 +15,23 @@ const getHomePage = async (req, res) => {
     }
 }
 
+const getLoginPage = async (req, res) => {
+    try {
+        
+        res.render('login', { 
+            title: 'Login', 
+            layout: 'layouts/main'
+        });
+    } catch (error) {
+        res.sendStatus(500);
+    }
+}
+
+const logoutUser = async (req, res) => {
+    res.clearCookie("adr_data");
+    res.redirect('/');
+}
+
 const getSubstance = async (req, res) => {
     try {
         
@@ -49,6 +66,8 @@ const getInstruction = async (req, res) => {
 
 module.exports = {
     getHomePage,
+    logoutUser,
+    getLoginPage,
     getSubstance,
     getInstruction
 }

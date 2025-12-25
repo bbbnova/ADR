@@ -6,3 +6,13 @@ content-type: application/json
     "password": "v1126v",
     "role": "admin"
 }
+
+###
+
+POST http://localhost:3000/admin/users/login HTTP/1.1
+content-type: application/json
+
+{
+    "name": "vasil",
+    "password": "v1126v"
+}

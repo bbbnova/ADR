@@ -4,6 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
 
 const homeRouter = require('./routers/home');
 const dashboardRouter = require('./routers/admin/dashboard');
@@ -14,6 +15,9 @@ const substanceRouter = require('./routers/admin/substanceRouter');
 const apiInstructionRouter = require('./routers/api/instructionRouter');
 const apiSubstanceRouter = require('./routers/api/substanceRouter');
 const excelRouter = require('./routers/api/excelRouter');
+
+//cookie parser
+app.use(cookieParser());
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));

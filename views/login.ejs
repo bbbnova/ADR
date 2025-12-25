@@ -1,0 +1,30 @@
+<div class="screen">
+    <div id="container" class="container">
+        <form id="form" class="login_form" action="/admin/users/login" method="POST">
+            <h3>Log In</h3>
+            <div>
+                <i><label for="email">Username</label></i>
+                <input id="name" name="name" type="text">
+            </div>
+            <div>
+                <i><label for="password">Password</label></i>
+                <input id="password" name="password" type="password">
+            </div>
+            <input id="toUrl" type="hidden" name="requestedUrl" value="">
+
+            <button id="btnLogin" class="login_submit" type="submit" >
+                <span>Log In</span> 
+            </button>				
+        </form>
+    </div>
+</div>
+
+<script>
+    window.onload = () => {
+        const requestedUrl = new URLSearchParams(window.location.search).get('requestedUrl');
+        if (requestedUrl) {
+            document.getElementById('toUrl').value = requestedUrl;
+            sessionStorage.removeItem('requestedUrl');
+        }
+    };
+</script>
