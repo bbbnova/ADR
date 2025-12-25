@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const homeRouter = require('./routers/home');
 const dashboardRouter = require('./routers/admin/dashboard');
+const userRouter = require('./routers/admin/userRouter');
 const dataRouter = require('./routers/admin/dataRouter');
 const instructionRouter = require('./routers/admin/instructionRouter');
 const substanceRouter = require('./routers/admin/substanceRouter');
@@ -27,6 +28,7 @@ app.use(expressLayouts);
 // Routes
 app.use('/', homeRouter);
 app.use('/admin/', dashboardRouter);
+app.use('/admin/users', userRouter);
 app.use('/admin/data', dataRouter);
 app.use('/admin/instructions/', instructionRouter);
 app.use('/admin/substances/', substanceRouter);

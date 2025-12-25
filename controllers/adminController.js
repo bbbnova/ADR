@@ -1,5 +1,7 @@
 const Instruction = require('../models/instructionModel');
 const Substance = require('../models/substanceModel');
+const User = require('../models/userModel');
+const bcrypt = require('bcrypt');
 
 const getDashboardPage = async (req, res) => {
     try {
@@ -25,9 +27,23 @@ const getDataPage = async (req, res) => {
     }
 }
 
+const addUser = async (req, res) => {
+    try {
+        const { name, password, role } = req.body;
+        let passwordHash = await bcrypt.hash(password, 11);
+        
+        const newUser = new User({ name, passwordHash, role });
+        await newUser.save();
+        console.log('user created: ', newUser);
+        res.status(201).send('User added successfully');
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
+}
 
 
 module.exports = {
     getDashboardPage,
-    getDataPage
+    getDataPage,
+    addUser
 };

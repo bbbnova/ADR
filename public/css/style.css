@@ -340,6 +340,10 @@ h3 {
     padding: 5px;
 }
 
+.instruction .ck-content {
+    background-color: white;
+    font-size: 14pt;
+}
 
 .hidden {
     display: none;
