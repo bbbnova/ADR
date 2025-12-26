@@ -42,7 +42,10 @@ app.use('/excel/', excelRouter);
 
 // 404 handler
 app.use((req, res) => {
-    res.status(404).render('404', {title: 'ADR app', url: req.originalUrl, layout: 'layouts/main' });
+    res.status(404).render('404', {
+        title: 'Действие при инциденти с опасни товари', 
+        url: req.originalUrl, 
+        layout: 'layouts/main' });
 });
 
 // Error handler
@@ -50,13 +53,12 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(err.status || 500);
     res.render('error', {
-        title: 'ADR app', 
+        title: 'Действие при инциденти с опасни товари', 
         message: err.message,
         error: process.env.NODE_ENV === 'development' ? err : {},
         layout: 'layouts/main'
     });
 });
-
 
 
 mongoose.connect(process.env.DATABASE_URL).then(() => {

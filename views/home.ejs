@@ -13,11 +13,11 @@
     <div class="nameEn">
         <span id="nameEn"></span>
     </div>
-    <div class="unNumber">
+    <div class="unNumber hidden">
         <span>Код по ООН:</span>
         <span id="unNumber"></span>
     </div>
-    <div class="hazardClass">
+    <div class="hazardClass hidden">
         <span>Клас:</span>
         <span id="hazardClass"></span>
     </div>
@@ -58,7 +58,8 @@
         </div>
     </div>
     <div class="instruction hidden">
-        <h4 class="description">ИНСТРУКЦИЯ</h4>
+        <h3><span>ИНСТРУКЦУЯ: </span><span id="instructionNumber"></span></h3>
+        <h4 class="description" id="instructionDescription"></h4>
         <%- include("./partials/content.ejs")  %>
     </div>
 
@@ -151,11 +152,12 @@
         
         if(instruction !== null && typeof instruction !== 'undefined') {
             document.querySelector(".instruction #content").innerHTML = content;
-            document.querySelector(".instruction .description").innerHTML = instruction.description;
+            document.querySelector("#instructionDescription").innerHTML = instruction.description;
+            document.querySelector("#instructionNumber").innerHTML = instruction.number;
             document.querySelector(".instruction").classList.remove("hidden");
         } else {
             document.querySelector(".instruction #content").innerHTML = "";
-            document.querySelector(".instruction .description").innerHTML = "";
+            document.querySelector("#instructionDescription").innerHTML = "";
             document.querySelector(".instruction").classList.add("hidden"); 
         }
     }
@@ -177,6 +179,7 @@
         }
         
         document.querySelector("#nameEn").innerHTML = selectedSubstance.nameEn;
+        document.querySelector(".unNumber").classList.remove("hidden");
         document.querySelector("#unNumber").innerHTML = selectedSubstance.unNumber;
         if(selectedSubstance.description !== null && typeof selectedSubstance.description !== 'undefined') {
             document.querySelector(".description").classList.remove('hidden');            
@@ -186,6 +189,7 @@
             document.querySelector("#description").innerHTML = "";
         }
         
+        document.querySelector(".hazardClass").classList.remove("hidden");
         document.querySelector("#hazardClass").innerHTML = selectedSubstance.hazardClass;
 
         if(selectedSubstance.dangerNumber !== null && typeof selectedSubstance.dangerNumber !== 'undefined') {
