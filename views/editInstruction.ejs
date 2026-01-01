@@ -57,7 +57,7 @@
         let contentBase64 = btoa(encodeURIComponent(content));
 
         try {
-            const response = await fetch('/api/instructions/update', {
+            const response = await fetch('/admin/api/instructions/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
