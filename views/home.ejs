@@ -2,7 +2,7 @@
 
 <div class="searchContainer">
     <h3>Търсене по наименование или код по ООН</h3>
-    <div id="substanceCombo" data-substances="<% decodeURI(atob(substances)) %>" class="dropDown_text">
+    <div id="substanceCombo" class="dropDown_text">
         <input id="textSubstance" class="text" type="text" autofocus>
         <div class="dropDown">
         </div>
@@ -110,7 +110,7 @@
 
     async function loadItems(text) {
         try {
-            let result = await fetch("/getSubstance/"+text, {
+            let result = await fetch("/getSubstanceByNameOrUnNumber/"+text, {
                 method: "GET"
             });
             let substances = await result.json();
@@ -126,7 +126,7 @@
 
     async function loadInstruction(text) {
         try {
-            let result = await fetch("/getInstruction/"+text, {
+            let result = await fetch("/getInstructionById/"+text, {
                 method: "GET"
             });
             let instruction = await result.json();

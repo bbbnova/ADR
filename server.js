@@ -6,15 +6,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 
-const homeRouter = require('./routers/home');
-const dashboardRouter = require('./routers/admin/dashboard');
-const userRouter = require('./routers/admin/userRouter');
-const dataRouter = require('./routers/admin/dataRouter');
-const instructionRouter = require('./routers/admin/instructionRouter');
-const substanceRouter = require('./routers/admin/substanceRouter');
-const apiInstructionRouter = require('./routers/api/instructionRouter');
-const apiSubstanceRouter = require('./routers/api/substanceRouter');
-const excelRouter = require('./routers/api/excelRouter');
+const homeRouter = require('./routers/homeRouter');
+const adminRouter = require('./routers/adminRouter'); 
 
 //cookie parser
 app.use(cookieParser());
@@ -31,14 +24,7 @@ app.use(expressLayouts);
 
 // Routes
 app.use('/', homeRouter);
-app.use('/admin/', dashboardRouter);
-app.use('/admin/users', userRouter);
-app.use('/admin/data', dataRouter);
-app.use('/admin/instructions/', instructionRouter);
-app.use('/admin/substances/', substanceRouter);
-app.use('/api/instructions/', apiInstructionRouter);
-app.use('/api/substances/', apiSubstanceRouter);
-app.use('/excel/', excelRouter);
+app.use('/admin/', adminRouter);
 
 // 404 handler
 app.use((req, res) => {
@@ -60,10 +46,9 @@ app.use((err, req, res, next) => {
     });
 });
 
-
 mongoose.connect(process.env.DATABASE_URL).then(() => {
     console.log('Database connected.');
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT;
     app.listen(PORT, () => {
         console.log(`Server listening on http://localhost:${PORT}`);
     });
