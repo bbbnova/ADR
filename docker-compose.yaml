@@ -1,14 +1,51 @@
 services:
-    #MongoDB service
-    mongo_db:
-        container_name: mongodb_container
-        image: mongo:8.0.4
-        ports:
-            - 27017:27017 # enable outside docker only for development
+    #MongoDB service // commented out for using MongoDB service from another docker-compose file
+    # mongo_db:
+    #     container_name: mongodb_container
+    #     image: mongo:8.0.4
+    #     ports:
+    #         - 27017:27017 # enable outside docker by removinh host IP
+    #     restart: unless-stopped
+    #     volumes: 
+    #         - mongo_db:/data/db
+    #     networks:
+    #         - db_network
+
+    #ADR
+    adr:
+        container_name: adr
+        secrets:
+            - token_password
+            - secret_key
+        build: .
         restart: unless-stopped
-        volumes: 
-            - mongo_db:/data/db
+        ports:
+            - 4001:3001
+        
+        environment:
+            PORT: 3001
+            DATABASE_URL: mongodb://mongo_db:27017/adr
+            TOKEN_PASSWORD: /run/secrets/token_password
+            SECRET_KEY: /run/secrets/secret_key
+            NODE_ENV: development
+        # depends_on:
+        #     - mongo_db   
+        networks:
+            - db_network
 
 volumes:
     mongo_db:
         driver: local
+
+secrets:
+    token_password:
+        file: ./token_password.txt
+        # external: true
+    secret_key:
+        file: ./secret_key.txt
+        # external: true
+
+networks:
+    db_network:
+        name: db_network
+        external: true

@@ -2,4 +2,5 @@
 node_modules/
 .env
 .rest
-
+token_password.txt
+secret_key.txt
