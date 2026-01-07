@@ -1,7 +1,7 @@
 services:
     #MongoDB service // commented out for using MongoDB service from another docker-compose file
     # mongo_db:
-    #     container_name: mongodb_container
+    #     container_name: mongodb
     #     image: mongo:8.0.4
     #     ports:
     #         - 27017:27017 # enable outside docker by removinh host IP
