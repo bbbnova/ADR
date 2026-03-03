@@ -2,9 +2,45 @@
 
 <div class="searchContainer">
     <h3>Търсене по наименование или код по ООН</h3>
+    <section class="homeInfo">
+        <h4>Как работи системата</h4>
+        <p>
+            Въведете най-малко 4 символа от наименование на вещество или UN код. От падащия списък изберете резултат,
+            за да видите класа на опасност, маркировките, кодовете на опасност, дистанциите при инцидент и приложимата инструкция.
+        </p>
+        <div class="homeInfoGrid">
+            <div class="homeInfoCard">
+                <h5>Бързи стъпки</h5>
+                <ol>
+                    <li>Въведете име (напр. „Бензин“) или UN код.</li>
+                    <li>Изберете съответното вещество от списъка.</li>
+                    <li>Прегледайте данните и следвайте показаната инструкция.</li>
+                </ol>
+            </div>
+            <div class="homeInfoCard">
+                <h5>Примерни търсения</h5>
+                <ul>
+                    <li>UN 1203</li>
+                    <li>Пропан</li>
+                    <li>Амоняк</li>
+                </ul>
+            </div>
+        </div>
+        <p class="homeInfoNote">
+            Информацията е предназначена за оперативна ориентация. При реален инцидент следвайте вътрешните процедури,
+            официалните ADR документи и указанията на компетентните органи.
+        </p>
+    </section>
     <div id="substanceCombo" class="dropDown_text">
-        <input id="textSubstance" class="text" type="text" autofocus>
+        <input id="textSubstance" class="text" type="text" placeholder="Пример: UN 1203, Бензин, Амоняк" autofocus>
+        <button id="clearTextSubstance" class="clearTextBtn hidden" type="button" aria-label="Изчисти търсенето">×</button>
         <div class="dropDown">
+        </div>
+    </div>
+    <div class="substanceAdrPlate hidden">
+        <div class="adrPlate" aria-label="ADR табела на избраното вещество">
+            <div class="adrPlateTop" id="adrDangerCode"></div>
+            <div class="adrPlateBottom" id="adrUnNumber"></div>
         </div>
     </div>
     <div class="nameBg">
@@ -71,7 +107,56 @@
 
     window.onload = () => {
         let elm = document.querySelector("#substanceCombo .text");
+        const clearButton = document.querySelector("#clearTextSubstance");
+
+        const toggleClearButton = () => {
+            if (!clearButton) {
+                return;
+            }
+
+            if (elm.value.trim().length > 0) {
+                clearButton.classList.remove("hidden");
+            } else {
+                clearButton.classList.add("hidden");
+            }
+        };
+
+        const clearSearchInput = () => {
+            elm.value = "";
+            const dropDownElement = document.querySelector("#substanceCombo .dropDown");
+            dropDownElement.classList.remove("open");
+            dropDownElement.innerHTML = "";
+            clearLoadedSubstanceData();
+            const homeInfo = document.querySelector(".homeInfo");
+            if (homeInfo) {
+                homeInfo.classList.remove("hidden");
+            }
+            toggleClearButton();
+            elm.focus();
+        };
+
+        if (clearButton) {
+            clearButton.onclick = () => {
+                clearSearchInput();
+            };
+        }
+
+        elm.onkeydown = (event) => {
+            if (event.key === "Escape") {
+                clearSearchInput();
+                event.preventDefault();
+            }
+        };
+
         elm.oninput = async (event) => {
+            toggleClearButton();
+
+            const homeInfo = document.querySelector(".homeInfo");
+            if (homeInfo && elm.value.trim().length === 0) {
+                homeInfo.classList.remove("hidden");
+                clearLoadedSubstanceData();
+            }
+
             let dropDownElement = document.querySelector("#substanceCombo .dropDown");
             dropDownElement.innerHTML = "";
             if(elm.value.length > 3) {
@@ -143,6 +228,10 @@
     async function selectItem(element) {
         let substance = await JSON.parse(decodeURI(atob(element.dataset.substance))); 
         setSelectedSubstance(substance);
+        const homeInfo = document.querySelector(".homeInfo");
+        if (homeInfo) {
+            homeInfo.classList.add("hidden");
+        }
         let dropDownElement = document.querySelector("#substanceCombo .dropDown");
         dropDownElement.classList.remove("open")
         dropDownElement.innerHTML = "";
@@ -167,6 +256,51 @@
         txt.innerHTML = html;
         return txt.value;
     };
+
+    function clearLoadedSubstanceData() {
+        selectedSubstance = null;
+
+        document.querySelector("#nameBg").innerHTML = "";
+        document.querySelector("#nameEn").innerHTML = "";
+
+        document.querySelector(".unNumber").classList.add("hidden");
+        document.querySelector("#unNumber").innerHTML = "";
+
+        document.querySelector(".hazardClass").classList.add("hidden");
+        document.querySelector("#hazardClass").innerHTML = "";
+
+        document.querySelector(".description").classList.add("hidden");
+        document.querySelector("#description").innerHTML = "";
+
+        document.querySelector(".dangerNumber").classList.add("hidden");
+        document.querySelector("#dangerNumber").innerHTML = "";
+        document.querySelector(".dangers").classList.add("hidden");
+        document.querySelector("#dangers").innerHTML = "";
+
+        document.querySelector(".substanceAdrPlate").classList.add("hidden");
+        document.querySelector("#adrDangerCode").innerHTML = "";
+        document.querySelector("#adrUnNumber").innerHTML = "";
+
+        document.querySelector(".reactsWithWater").classList.add("hidden");
+        document.querySelector(".reactionProduct").classList.add("hidden");
+        document.querySelector(".reactionProduct .name").innerHTML = "";
+        document.querySelector(".polimerization").classList.add("hidden");
+
+        document.querySelector(".imagesContainer .images").innerHTML = "";
+
+        document.querySelector(".distances").classList.add("hidden");
+        document.querySelector(".smallLeak.initialDistance").innerHTML = "";
+        document.querySelector(".smallLeak.dayDistance").innerHTML = "";
+        document.querySelector(".smallLeak.nightDistance").innerHTML = "";
+        document.querySelector(".bigLeak.initialDistance").innerHTML = "";
+        document.querySelector(".bigLeak.dayDistance").innerHTML = "";
+        document.querySelector(".bigLeak.nightDistance").innerHTML = "";
+
+        document.querySelector(".instruction #content").innerHTML = "";
+        document.querySelector("#instructionDescription").innerHTML = "";
+        document.querySelector("#instructionNumber").innerHTML = "";
+        document.querySelector(".instruction").classList.add("hidden");
+    }
 
     function setSelectedSubstance(substance) {
         selectedSubstance = substance;       
@@ -202,6 +336,16 @@
             document.querySelector("#dangerNumber").innerHTML = '';
             document.querySelector(".dangers").classList.add('hidden');
             document.querySelector("#dangers").innerHTML = '';
+        }
+
+        if(selectedSubstance.unNumber !== null && typeof selectedSubstance.unNumber !== 'undefined') {
+            document.querySelector(".substanceAdrPlate").classList.remove("hidden");
+            document.querySelector("#adrUnNumber").innerHTML = selectedSubstance.unNumber;
+            document.querySelector("#adrDangerCode").innerHTML = selectedSubstance.dangerNumber || "";
+        } else {
+            document.querySelector(".substanceAdrPlate").classList.add("hidden");
+            document.querySelector("#adrUnNumber").innerHTML = "";
+            document.querySelector("#adrDangerCode").innerHTML = "";
         }
         
         

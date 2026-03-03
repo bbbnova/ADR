@@ -90,28 +90,90 @@ h3 {
     max-width: 800px;
     font-size: 14pt;
     margin: 0px 20px 20px 20px;
-    display: -ms-inline-grid;
-    grid-template-columns: auto auto auto;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
     gap: 10px;
     justify-items: left;
-    align-items: top;
-    grid-template-areas: 'title title title'
-                         'substanceCombo substanceCombo substanceCombo'
-                         'nameBg nameBg nameBg'
-                         'nameEn nameEn nameEn'
-                         'description description description'
-                         'hazardClass hazardClass hazardClass'  
-                         'unNumber unNumber unNumber'
-                         'dangerNumber dangers dangers'
-                         'imagesContainer imagesContainer imagesContainer'
-                         'dangerAnotations dangerAnotations dangerAnotations'
-                         'distances distances distances'
-                         'instruction instruction instruction';
+    align-items: start;
+    grid-template-areas: 'title title'
+                         'substanceCombo substanceCombo'
+                         'substanceAdrPlate substanceAdrPlate'
+                         'homeInfo homeInfo'
+                         'nameBg nameBg'
+                         'nameEn nameEn'
+                         'description description'
+                         'hazardClass hazardClass'
+                         'unNumber unNumber'
+                         'dangerNumber dangerNumber'
+                         'dangers dangers'
+                         'imagesContainer imagesContainer'
+                         'dangerAnotations dangerAnotations'
+                         'distances distances'
+                         'instruction instruction';
 }
 
 .searchContainer h3 {
     grid-area: title;
     margin: 20px 0 5px 0;
+}
+
+.homeInfo {
+    grid-area: homeInfo;
+    background-color: #f4f4f4;
+    border: 1px solid #d0d0d0;
+    border-left: 6px solid #e6994c;
+    border-radius: 8px;
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    align-self: start;
+}
+
+.homeInfo h4 {
+    margin: 0 0 8px 0;
+}
+
+.homeInfo p {
+    margin: 0;
+    line-height: 1.45;
+}
+
+.homeInfoGrid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+}
+
+.homeInfoCard {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.homeInfoCard h5 {
+    margin: 0 0 8px 0;
+    font-size: 0.95em;
+}
+
+.homeInfoCard ol,
+.homeInfoCard ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.homeInfoCard li {
+    margin-bottom: 4px;
+}
+
+.homeInfoNote {
+    margin-top: 12px !important;
+    padding: 8px;
+    background-color: #fff8ed;
+    border: 1px solid #f1d4ab;
+    border-radius: 5px;
+    font-size: 0.92em;
 }
 
 #substanceCombo {
@@ -123,7 +185,7 @@ h3 {
     width: 100%;
     box-sizing: border-box;
     font-size: 14pt;
-    padding: 5px;
+    padding: 5px 36px 5px 8px;
 }
 
 .dropDown_text {
@@ -135,6 +197,35 @@ h3 {
     border: 1px solid grey;
     border-radius: 5px;
     outline: none;
+}
+
+.dropDown_text .clearTextBtn {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #b1b1b1;
+    border-radius: 50%;
+    background-color: #f3f3f3;
+    color: #5c5c5c;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.dropDown_text .clearTextBtn:hover {
+    background-color: #e7e7e7;
+}
+
+.dropDown_text .clearTextBtn:focus {
+    outline: 2px solid #e6994c;
+    outline-offset: 1px;
 }
 
 .dropDown_text .dropDown{
@@ -234,6 +325,28 @@ h3 {
     font-weight: 900;
     grid-area: dangers;
     padding: 5px;
+}
+
+.substanceAdrPlate {
+    grid-area: substanceAdrPlate;
+    padding-left: 5px;
+    margin-top: 2px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.substanceAdrPlate .adrPlate {
+    width: 120px;
+    height: 90px;
+}
+
+.substanceAdrPlate .adrPlateTop,
+.substanceAdrPlate .adrPlateBottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 1.1rem;
 }
 
 .dangerAnotations {
@@ -375,4 +488,327 @@ h3 {
 
 .hidden {
     display: none;
+}
+
+.dangerCodesPage {
+    max-width: 900px;
+}
+
+.dangerCodesPage h3 {
+    margin-left: 0;
+}
+
+.dangerCodesIntro {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.dangerCodesFilter {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 420px;
+}
+
+.dangerCodesFilter input {
+    box-sizing: border-box;
+    border: 1px solid #8e8e8e;
+    border-radius: 6px;
+    padding: 8px 34px 8px 10px;
+    font-size: 12pt;
+    width: 100%;
+}
+
+.dangerCodesFilterInputWrap {
+    position: relative;
+}
+
+.dangerCodesClearBtn {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 1px solid #b1b1b1;
+    border-radius: 50%;
+    background-color: #f3f3f3;
+    color: #5c5c5c;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.dangerCodesClearBtn:hover {
+    background-color: #e7e7e7;
+}
+
+.dangerCodesClearBtn:focus {
+    outline: 2px solid #e6994c;
+    outline-offset: 1px;
+}
+
+.dangerCodeItem.hidden,
+.dangerCodesClearBtn.hidden {
+    display: none;
+}
+
+.dangerCodesList {
+    display: grid;
+    gap: 8px;
+}
+
+.dangerCodeItem {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 10px;
+    align-items: start;
+    background-color: #f8f8f8;
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.adrPlate {
+    width: 90px;
+    height: 68px;
+    border: 2px solid #2d2d2d;
+    border-radius: 4px;
+    background-color: #f3a141;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    overflow: hidden;
+}
+
+.adrPlateTop {
+    border-bottom: 2px solid #2d2d2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adrPlateBottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dangerCodeNumber {
+    font-weight: 900;
+    color: #2d2d2d;
+    font-size: 1.05rem;
+}
+
+.dangerCodeDescription {
+    line-height: 1.35;
+}
+
+.dangerCodeDescriptionWrap {
+    display: grid;
+    gap: 8px;
+}
+
+.dangerCodeInstructions ul {
+    margin: 5px 0 0 0;
+    padding-left: 20px;
+}
+
+.dangerCodeInstructions li {
+    margin-bottom: 2px;
+}
+
+.dangerCodeInstructions span {
+    margin-left: 4px;
+}
+
+.dangerCodeInstructionLinks {
+    margin-left: 4px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.instructionPublicPage {
+    max-width: 900px;
+}
+
+.instructionPublicPage h3 {
+    margin-left: 0;
+    margin-bottom: 6px;
+}
+
+.instructionPublicPage h4 {
+    margin: 0 0 8px 0;
+}
+
+.instructionPublicDescription {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.platesPage {
+    max-width: 960px;
+}
+
+.platesPage h3 {
+    margin-left: 0;
+}
+
+.platesIntro {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.platesFilterBox {
+    background-color: #f4f4f4;
+    border: 1px solid #d2d2d2;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
+.platesFilterHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.platesClearBtn {
+    border: 1px solid #b7b7b7;
+    border-radius: 6px;
+    background-color: #f8f8f8;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.platesClearBtn:hover {
+    background-color: #ececec;
+}
+
+.platesFilterOptions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.plateOptionItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #d0d0d0;
+    border-radius: 999px;
+    background-color: #ffffff;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.plateOptionItem img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.plateOptionItem span {
+    font-size: 0.85em;
+}
+
+.platesList {
+    display: grid;
+    gap: 10px;
+}
+
+.platesResultCard {
+    display: grid;
+    gap: 10px;
+    background-color: #f8f8f8;
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.platesSelectedRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.plateSelectedItem {
+    text-align: center;
+}
+
+.plateItem {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    align-items: start;
+    background-color: #f8f8f8;
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.plateItem.hidden,
+.platesClearBtn.hidden,
+.platesResultCard.hidden {
+    display: none;
+}
+
+.plateImageWrap {
+    text-align: center;
+}
+
+.platePreviewImage {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+}
+
+.plateFileName {
+    margin-top: 4px;
+    font-size: 0.85em;
+    color: #555;
+}
+
+.plateDetails {
+    display: grid;
+    gap: 7px;
+    line-height: 1.35;
+}
+
+.plateDangerCodes,
+.plateInstructionLinks,
+.plateNoData {
+    margin-left: 4px;
+}
+
+@media (max-width: 640px) {
+    .plateItem {
+        grid-template-columns: 1fr;
+    }
+
+    .plateImageWrap {
+        text-align: left;
+    }
+}
+
+.dangerCodesEmpty {
+    margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+    .dangerCodeItem {
+        grid-template-columns: 1fr;
+    }
+
+    .adrPlate {
+        width: fit-content;
+        min-width: 90px;
+    }
 }

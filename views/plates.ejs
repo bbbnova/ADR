@@ -1,0 +1,255 @@
+<div class="container platesPage">
+    <h3>Табели за опасност</h3>
+    <p class="platesIntro">
+        Показани са всички налични табели в приложението. За всяка табела са изброени
+        относимите кодове на опасност и инструкции според веществата в базата данни.
+    </p>
+
+    <div class="platesFilterBox">
+        <div class="platesFilterHeader">
+            <strong>Филтър по табели</strong>
+            <button id="clearPlateSelection" type="button" class="platesClearBtn hidden">Изчисти избор</button>
+        </div>
+        <div class="platesFilterOptions" id="platesFilterOptions">
+            <% if (plates && plates.length > 0) { %>
+                <% plates.forEach((plate) => { %>
+                    <label class="plateOptionItem">
+                        <input type="checkbox" class="plateFilterCheck" value="<%= plate.image %>">
+                        <img src="/img/plates/<%= plate.image %>" alt="Табела <%= plate.image %>">
+                        <span><%= plate.image %></span>
+                    </label>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="platesResultCard" id="platesResultCard">
+        <div class="platesSelectedRow" id="platesSelectedRow"></div>
+        <div class="plateDetails">
+            <div>
+                <strong>Кодове на опасност:</strong>
+                <span id="filteredDangerCodes" class="plateDangerCodes"></span>
+            </div>
+            <div>
+                <strong>Инструкции:</strong>
+                <span id="filteredInstructions" class="plateInstructionLinks"></span>
+            </div>
+        </div>
+    </div>
+    <p id="platesNoResults" class="plateNoData hidden">Няма общи кодове/инструкции за избраните табели.</p>
+
+    <h4>Всички налични табели</h4>
+    <div class="platesList">
+        <% if (plates && plates.length > 0) { %>
+            <% plates.forEach((plate) => { %>
+                <div class="plateItem">
+                    <div class="plateImageWrap">
+                        <img src="/img/plates/<%= plate.image %>" alt="Табела <%= plate.image %>" class="platePreviewImage">
+                        <div class="plateFileName"><%= plate.image %></div>
+                    </div>
+                    <div class="plateDetails">
+                        <div>
+                            <strong>Кодове на опасност:</strong>
+                            <% if (plate.dangerCodes && plate.dangerCodes.length > 0) { %>
+                                <span class="plateDangerCodes"><%= plate.dangerCodes.join(', ') %></span>
+                            <% } else { %>
+                                <span class="plateNoData">Няма налични кодове.</span>
+                            <% } %>
+                        </div>
+                        <div>
+                            <strong>Инструкции:</strong>
+                            <% if (plate.instructions && plate.instructions.length > 0) { %>
+                                <span class="plateInstructionLinks">
+                                    <% plate.instructions.forEach((instruction, index) => { %>
+                                        <a href="/instruction/<%= instruction.id %>"><%= instruction.number %></a><% if (index < plate.instructions.length - 1) { %>, <% } %>
+                                    <% }) %>
+                                </span>
+                            <% } else { %>
+                                <span class="plateNoData">Няма свързани инструкции.</span>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="plateNoData">Няма намерени табели.</p>
+        <% } %>
+    </div>
+</div>
+
+<script id="platesData" type="application/json"><%- JSON.stringify(plates || []) %></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const plateDataElement = document.querySelector('#platesData');
+        const plateData = plateDataElement ? JSON.parse(plateDataElement.textContent || '[]') : [];
+        const checks = Array.from(document.querySelectorAll('.plateFilterCheck'));
+        const clearButton = document.querySelector('#clearPlateSelection');
+        const noResults = document.querySelector('#platesNoResults');
+        const selectedRow = document.querySelector('#platesSelectedRow');
+        const filteredDangerCodes = document.querySelector('#filteredDangerCodes');
+        const filteredInstructions = document.querySelector('#filteredInstructions');
+        const resultCard = document.querySelector('#platesResultCard');
+
+        if (checks.length === 0 || !selectedRow || !filteredDangerCodes || !filteredInstructions || !resultCard) {
+            return;
+        }
+
+        const intersectSets = (sets) => {
+            if (sets.length === 0) {
+                return new Set();
+            }
+
+            const [firstSet, ...restSets] = sets;
+            return new Set([...firstSet].filter(value => restSets.every(current => current.has(value))));
+        };
+
+        const extractDigits = (codes) => {
+            const digits = new Set();
+            (codes || []).forEach(code => {
+                const matches = (code || '').toString().match(/\d/g) || [];
+                matches.forEach(digit => digits.add(digit));
+            });
+            return digits;
+        };
+
+        const renderSelectedPlates = (selectedPlates) => {
+            selectedRow.innerHTML = '';
+            selectedPlates.forEach(plate => {
+                const item = document.createElement('div');
+                item.className = 'plateSelectedItem';
+                item.innerHTML = `
+                    <img src="/img/plates/${plate.image}" alt="Табела ${plate.image}" class="platePreviewImage">
+                    <div class="plateFileName">${plate.image}</div>
+                `;
+                selectedRow.appendChild(item);
+            });
+        };
+
+        const renderInstructionLinks = (instructions) => {
+            filteredInstructions.innerHTML = '';
+            instructions.forEach((instruction, index) => {
+                const link = document.createElement('a');
+                link.href = `/instruction/${instruction.id}`;
+                link.textContent = instruction.number;
+                filteredInstructions.appendChild(link);
+                if (index < instructions.length - 1) {
+                    filteredInstructions.appendChild(document.createTextNode(', '));
+                }
+            });
+        };
+
+        const applyFilter = () => {
+            const selected = checks.filter(ch => ch.checked).map(ch => ch.value);
+            const selectedSet = new Set(selected);
+            const selectedPlates = plateData.filter(plate => selectedSet.has(plate.image));
+
+            if (selectedPlates.length === 0) {
+                resultCard.classList.add('hidden');
+                if (noResults) {
+                    noResults.classList.add('hidden');
+                }
+                if (clearButton) {
+                    clearButton.classList.add('hidden');
+                }
+                return;
+            }
+
+            renderSelectedPlates(selectedPlates);
+
+            const digitSets = selectedPlates.map(plate => extractDigits(plate.dangerCodes || []));
+            const commonDigits = Array.from(intersectSets(digitSets))
+                .sort((a, b) => a.localeCompare(b, 'bg', { numeric: true, sensitivity: 'base' }));
+
+            const commonDigitSet = new Set(commonDigits);
+            const matchedInstructionMap = new Map();
+            const instructionMatchCount = new Map();
+
+            selectedPlates.forEach(plate => {
+                const plateMatchedInstructions = new Set();
+
+                (plate.codeInstructions || []).forEach(entry => {
+                    const code = (entry.code || '').toString();
+                    const codeDigits = code.match(/\d/g) || [];
+                    const hasCommonDigit = codeDigits.some(digit => commonDigitSet.has(digit));
+
+                    if (hasCommonDigit) {
+                        (entry.instructions || []).forEach(instruction => {
+                            if (instruction && instruction.id) {
+                                plateMatchedInstructions.add(instruction.id);
+                                matchedInstructionMap.set(instruction.id, instruction);
+                            }
+                        });
+                    }
+                });
+
+                plateMatchedInstructions.forEach(instructionId => {
+                    instructionMatchCount.set(
+                        instructionId,
+                        (instructionMatchCount.get(instructionId) || 0) + 1
+                    );
+                });
+            });
+
+            const isGeneralInstruction = (instruction) => {
+                const title = (instruction.title || '').toString().trim().toLowerCase();
+                return title.startsWith('обща инструкция за');
+            };
+
+            const commonInstructions = Array.from(matchedInstructionMap.values())
+                .sort((a, b) => {
+                    const generalA = isGeneralInstruction(a) ? 1 : 0;
+                    const generalB = isGeneralInstruction(b) ? 1 : 0;
+
+                    if (generalA !== generalB) {
+                        return generalB - generalA;
+                    }
+
+                    const countA = instructionMatchCount.get(a.id) || 0;
+                    const countB = instructionMatchCount.get(b.id) || 0;
+
+                    if (countA !== countB) {
+                        return countB - countA;
+                    }
+
+                    return (a.number || '').localeCompare((b.number || ''), 'bg', { numeric: true, sensitivity: 'base' });
+                });
+
+            filteredDangerCodes.textContent = commonDigits.length > 0
+                ? commonDigits.join(', ')
+                : 'Няма общи кодове.';
+
+            if (commonInstructions.length > 0) {
+                renderInstructionLinks(commonInstructions);
+            } else {
+                filteredInstructions.textContent = 'Няма общи инструкции.';
+            }
+
+            const hasIntersection = commonDigits.length > 0 || commonInstructions.length > 0;
+            if (noResults) {
+                noResults.classList.toggle('hidden', hasIntersection);
+            }
+
+            resultCard.classList.remove('hidden');
+
+            if (clearButton) {
+                clearButton.classList.remove('hidden');
+            }
+        };
+
+        checks.forEach(ch => {
+            ch.addEventListener('change', applyFilter);
+        });
+
+        if (clearButton) {
+            clearButton.addEventListener('click', () => {
+                checks.forEach(ch => {
+                    ch.checked = false;
+                });
+                applyFilter();
+            });
+        }
+
+        applyFilter();
+    });
+</script>

@@ -1,0 +1,104 @@
+<div class="container dangerCodesPage">
+    <h3>Кодове на опасност</h3>
+    <p class="dangerCodesIntro">
+        Показани са всички кодове на опасност, които реално присъстват в базата с вещества.
+        Използвайте полето за филтриране по код или по текст в обяснението.
+    </p>
+
+    <div class="dangerCodesFilter">
+        <label for="dangerCodeFilter">Филтър</label>
+        <div class="dangerCodesFilterInputWrap">
+            <input id="dangerCodeFilter" type="text" placeholder="Пример: 33, X88, токсично">
+            <button id="clearDangerCodeFilter" class="dangerCodesClearBtn hidden" type="button" aria-label="Изчисти филтъра">×</button>
+        </div>
+    </div>
+
+    <div class="dangerCodesList" id="dangerCodesList">
+        <% if (dangerCodes && dangerCodes.length > 0) { %>
+            <% dangerCodes.forEach((item) => { %>
+                <div class="dangerCodeItem" data-code="<%= item.number %>" data-description="<%= item.description %>">
+                    <div class="adrPlate" aria-label="ADR табела">
+                        <div class="adrPlateTop dangerCodeNumber"><%= item.number %></div>
+                        <div class="adrPlateBottom"></div>
+                    </div>
+                    <div class="dangerCodeDescriptionWrap">
+                        <div class="dangerCodeDescription"><%= item.description %></div>
+                        <div class="dangerCodeInstructions">
+                            <strong>Инструкции:</strong>
+                            <% if (item.instructions && item.instructions.length > 0) { %>
+                                <span class="dangerCodeInstructionLinks">
+                                    <% item.instructions.forEach((instruction, index) => { %>
+                                        <a href="/instruction/<%= instruction.id %>"><%= instruction.number %></a><% if (index < item.instructions.length - 1) { %>, <% } %>
+                                    <% }) %>
+                                </span>
+                            <% } else { %>
+                                <span>Няма свързани инструкции.</span>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="dangerCodesEmpty">Няма намерени кодове на опасност в базата данни.</p>
+        <% } %>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const filterInput = document.querySelector('#dangerCodeFilter');
+        const clearFilterButton = document.querySelector('#clearDangerCodeFilter');
+        const items = Array.from(document.querySelectorAll('.dangerCodeItem'));
+
+        if (!filterInput) {
+            return;
+        }
+
+        const toggleClearButton = () => {
+            if (!clearFilterButton) {
+                return;
+            }
+
+            if (filterInput.value.trim().length > 0) {
+                clearFilterButton.classList.remove('hidden');
+            } else {
+                clearFilterButton.classList.add('hidden');
+            }
+        };
+
+        const applyFilter = () => {
+            const searchText = filterInput.value.trim().toLowerCase();
+
+            items.forEach((item) => {
+                const codeElement = item.querySelector('.dangerCodeNumber');
+                const descriptionElement = item.querySelector('.dangerCodeDescription');
+                const code = (codeElement ? codeElement.textContent : '').toLowerCase();
+                const description = (descriptionElement ? descriptionElement.textContent : '').toLowerCase();
+                const isMatch = code.includes(searchText) || description.includes(searchText);
+                item.classList.toggle('hidden', !isMatch);
+            });
+
+            toggleClearButton();
+        };
+
+        const clearFilter = () => {
+            filterInput.value = '';
+            applyFilter();
+            filterInput.focus();
+        };
+
+        filterInput.addEventListener('input', applyFilter);
+        filterInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                clearFilter();
+                event.preventDefault();
+            }
+        });
+
+        if (clearFilterButton) {
+            clearFilterButton.addEventListener('click', clearFilter);
+        }
+
+        applyFilter();
+    });
+</script>

@@ -1,0 +1,17 @@
+<div class="container instructionPublicPage">
+    <h3>Инструкция № <%= instruction.number %></h3>
+    <% if (instruction.title) { %>
+        <h4><%= instruction.title %></h4>
+    <% } %>
+    <% if (instruction.description) { %>
+        <p class="instructionPublicDescription"><%= instruction.description %></p>
+    <% } %>
+
+    <%- include("./partials/content.ejs") %>
+</div>
+
+<script>
+    const encodedContent = '<%- instruction.content %>';
+    const decodedContent = decodeURIComponent(atob(encodedContent));
+    document.getElementById('content').innerHTML = decodedContent;
+</script>
