@@ -61,7 +61,7 @@
                             <% if (plate.instructions && plate.instructions.length > 0) { %>
                                 <span class="plateInstructionLinks">
                                     <% plate.instructions.forEach((instruction, index) => { %>
-                                        <a href="/instruction/<%= instruction.id %>"><%= instruction.number %></a><% if (index < plate.instructions.length - 1) { %>, <% } %>
+                                        <a href="/instruction/<%= instruction.id %>" title="<%= instruction.description %>"><%= instruction.number %></a><% if (index < plate.instructions.length - 1) { %>, <% } %>
                                     <% }) %>
                                 </span>
                             <% } else { %>
@@ -132,6 +132,7 @@
                 const link = document.createElement('a');
                 link.href = `/instruction/${instruction.id}`;
                 link.textContent = instruction.number;
+                link.title = instruction.description || '';
                 filteredInstructions.appendChild(link);
                 if (index < instructions.length - 1) {
                     filteredInstructions.appendChild(document.createTextNode(', '));

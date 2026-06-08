@@ -28,7 +28,7 @@
                             <% if (item.instructions && item.instructions.length > 0) { %>
                                 <span class="dangerCodeInstructionLinks">
                                     <% item.instructions.forEach((instruction, index) => { %>
-                                        <a href="/instruction/<%= instruction.id %>"><%= instruction.number %></a><% if (index < item.instructions.length - 1) { %>, <% } %>
+                                        <a href="/instruction/<%= instruction.id %>" title="<%= instruction.description %>"><%= instruction.number %></a><% if (index < item.instructions.length - 1) { %>, <% } %>
                                     <% }) %>
                                 </span>
                             <% } else { %>

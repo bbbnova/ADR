@@ -169,7 +169,8 @@ const getPlatesPage = async (req, res) => {
                     const instructionItem = {
                         id: instructionId,
                         number: instruction.number || '',
-                        title: instruction.title || ''
+                        title: instruction.title || '',
+                        description: instruction.description || ''
                     };
 
                     plate.instructions.set(instructionId, instructionItem);
