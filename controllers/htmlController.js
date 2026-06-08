@@ -26,6 +26,17 @@ const getLoginPage = async (req, res) => {
     }
 }
 
+const getLegalPage = async (req, res) => {
+    try {
+        res.render('legal', {
+            title: 'Правна информация — Действие при инциденти с опасни товари',
+            layout: 'layouts/main'
+        });
+    } catch (error) {
+        res.sendStatus(500);
+    }
+}
+
 const getDangerNumbersPage = async (req, res) => {
     try {
         const uniqueDangerNumbers = await Substance.distinct('dangerNumber', {
@@ -398,6 +409,7 @@ const getDeleteSubstancePage = async (req, res) => {
 }
 
 module.exports = {
+    getLegalPage,
     getHomePage,
     getLoginPage,
     getDangerNumbersPage,
