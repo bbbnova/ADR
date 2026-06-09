@@ -4,3 +4,4 @@ node_modules/
 .rest
 token_password.txt
 secret_key.txt
+iv.txt
