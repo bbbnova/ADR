@@ -98,7 +98,21 @@ SECRET_KEY=сменете_с_произволен_таен_низ
 
 > Генерирайте сигурни стойности с: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 
-### 4. Стартиране с PM2 (препоръчително за продукция)
+### 4. Зареждане на базата данни
+
+Базата данни се доставя като компресиран архив (`adr_04-04-2026.gz`), създаден с `mongodump --gzip --archive`.
+
+```bash
+mongorestore --uri="mongodb://127.0.0.1:27017" --gzip --archive=adr_04-04-2026.gz
+```
+
+### 5. Стартиране (без PM2)
+
+```bash
+node server.js
+```
+
+### 6. Стартиране с PM2 (препоръчително за продукция)
 
 ```bash
 # Инсталиране на PM2
@@ -112,7 +126,7 @@ pm2 startup
 pm2 save
 ```
 
-### 5. Настройка на Nginx (обратен прокси, по избор)
+### 7. Настройка на Nginx (обратен прокси, по избор)
 
 ```nginx
 server {
@@ -175,7 +189,23 @@ SECRET_KEY=сменете_с_произволен_таен_низ
 > node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 > ```
 
-### 4. Стартиране с PM2
+### 4. Зареждане на базата данни
+
+Базата данни се доставя като компресиран архив (`adr_04-04-2026.gz`), създаден с `mongodump --gzip --archive`.
+
+```powershell
+mongorestore --gzip --archive=adr_04-04-2026.gz
+```
+
+> Уверете се, че `mongorestore` е в системния `PATH`. Инструментът се инсталира заедно с **MongoDB Database Tools** от [mongodb.com/try/download/database-tools](https://www.mongodb.com/try/download/database-tools).
+
+### 5. Стартиране (без PM2)
+
+```powershell
+node .\server.js
+```
+
+### 6. Стартиране с PM2
 
 ```powershell
 npm install -g pm2
@@ -185,7 +215,7 @@ pm2-startup install
 pm2 save
 ```
 
-### 5. Настройка на IIS като обратен прокси (по избор)
+### 7. Настройка на IIS като обратен прокси (по избор)
 
 1. Инсталирайте **IIS** от „Turn Windows features on or off".
 2. Инсталирайте **URL Rewrite** и **Application Request Routing (ARR)** за IIS.
@@ -226,7 +256,14 @@ echo "сменете_с_произволен_таен_низ" > secret_key.txt
 
 По подразбиране приложението очаква MongoDB на адрес `mongodb://mongo_db:27017/adr` (вътрешна мрежа). Ако MongoDB работи на отделен контейнер или сървър, актуализирайте `DATABASE_URL` в `docker-compose.yaml`.
 
-За да включите вградена MongoDB, разкоментирайте секцията `mongo_db` в `docker-compose.yaml`:
+В текущия файл услугата `mongo_db` вече е включена.
+
+Ако искате външна MongoDB (извън този compose):
+- променете `DATABASE_URL` към външния адрес;
+- премахнете услугата `mongo_db`;
+- премахнете `depends_on` в услугата `adr`, ако е включен.
+
+Пример за конфигурация с локална MongoDB услуга:
 
 ```yaml
 services:
@@ -250,7 +287,24 @@ docker compose up -d --build
 
 Приложението ще бъде достъпно на `http://localhost:4001`.
 
-### 4. Управление на контейнера
+### 4. Зареждане на базата данни
+
+Базата данни се доставя като компресиран архив (`adr_04-04-2026.gz`), създаден с `mongodump --gzip --archive`.
+
+Възстановяване директно от хоста към MongoDB услугата:
+
+```bash
+docker compose exec -T mongo_db mongorestore --gzip --archive < adr_04-04-2026.gz
+```
+
+Алтернатива (по име на контейнер):
+
+```bash
+docker cp adr_04-04-2026.gz mongodb:/tmp/adr_04-04-2026.gz
+docker exec -it mongodb mongorestore --gzip --archive=/tmp/adr_04-04-2026.gz
+```
+
+### 5. Управление на контейнера
 
 ```bash
 # Преглед на логовете
@@ -263,7 +317,7 @@ docker compose down
 docker compose up -d --build
 ```
 
-### 5. Продукционна настройка с Docker
+### 6. Продукционна настройка с Docker
 
 За продукционна среда се препоръчва:
 - Промяна на `NODE_ENV` на `production` в `docker-compose.yaml`.
