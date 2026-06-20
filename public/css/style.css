@@ -18,6 +18,23 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    overflow: hidden;
+}
+
+.siteHeaderImage {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(62vw, 600px);
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 1;
+    -webkit-mask-image: linear-gradient(to right, transparent 0px, black 50px, black calc(100% - 50px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0px, black 50px, black calc(100% - 50px), transparent 100%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .siteHeaderInner {
@@ -30,6 +47,8 @@ body {
     gap: 6px;
     min-height: 72px;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
 }
 
 .siteBrand {
@@ -66,9 +85,10 @@ body {
 
 .siteBrandSub {
     font-size: 0.92rem;
-    color: #a0aec0;
-    font-weight: 400;
+    color: #f6a04d;
+    font-weight: 600;
     line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.75);
 }
 
 .mainNav {
@@ -84,22 +104,23 @@ body {
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #cbd5e0;
+    color: #f8fafc;
     text-decoration: none;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(15,23,42,0.62);
+    border: 1px solid rgba(255,255,255,0.22);
     transition: background 0.15s, color 0.15s, border-color 0.15s;
     white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.65);
 }
 
 .mainNavLink:visited {
-    color: #cbd5e0;
+    color: #f8fafc;
 }
 
 .mainNavLink:hover,
 .mainNavLink:visited:hover {
-    background: rgba(230,153,76,0.18);
-    color: #e6994c;
+    background: rgba(230,153,76,0.72);
+    color: #fff;
     border-color: rgba(230,153,76,0.4);
     text-decoration: none;
 }
@@ -619,9 +640,9 @@ h3 {
     padding: 20px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     display: grid;
-    grid-template-columns: minmax(130px, auto) 1fr;
+    grid-template-columns: 1fr minmax(130px, auto);
     grid-template-areas:
-        "left right"
+        "right left"
         "distances distances";
     gap: 14px 24px;
     align-items: start;
@@ -633,8 +654,8 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-right: 16px;
-    border-right: 1px solid #f0f0f0;
+    padding-left: 16px;
+    border-left: 1px solid #f0f0f0;
 }
 
 .substanceRight {
@@ -654,13 +675,13 @@ h3 {
 @media (max-width: 500px) {
     .substanceInfo {
         grid-template-columns: 1fr;
-        grid-template-areas: "left" "right" "distances";
+        grid-template-areas: "right" "left" "distances";
     }
 
     .substanceLeft {
-        border-right: none;
+        border-left: none;
         border-bottom: 1px solid #f0f0f0;
-        padding-right: 0;
+        padding-left: 0;
         padding-bottom: 12px;
     }
 }
@@ -691,6 +712,11 @@ h3 {
         'header initialDistanceHeader dayDistanceHeader nightDistanceHeader'
         'smallLeakHeader initialDistanceS dayDistanceS nightDistanceS'
         'bigLeakHeader initialDistanceL dayDistanceL nightDistanceL';
+}
+
+.distanceTableCorner {
+    grid-area: header;
+    background: #f1f5f9;
 }
 
 .theader {
@@ -754,11 +780,16 @@ h3 {
     font-weight: 600;
 }
 
-/* On narrow screens switch to 3-col: drop top-left empty header */
+/* On narrow screens transpose to 3-col: spill types as column headers */
 @media (max-width: 480px) {
     .distanceTable {
-        grid-template-columns: auto 1fr 1fr 1fr;
+        grid-template-columns: auto 1fr 1fr;
         min-width: 0;
+        grid-template-areas:
+            'header smallLeakHeader bigLeakHeader'
+            'initialDistanceHeader initialDistanceS initialDistanceL'
+            'dayDistanceHeader dayDistanceS dayDistanceL'
+            'nightDistanceHeader nightDistanceS nightDistanceL';
     }
 
     .theader {
