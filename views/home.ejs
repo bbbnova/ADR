@@ -1,29 +1,32 @@
 
 
 <div class="searchContainer">
-    <h3>Търсене по наименование или код по ООН</h3>
+    <div class="searchTitle">
+        <h2>Опасни товари &mdash; ADR</h2>
+        <p>Търсете по наименование на вещество или код по ООН</p>
+    </div>
+
+    <div id="substanceCombo" class="dropDown_text">
+        <span class="searchInputIcon">&#128269;</span>
+        <input id="textSubstance" class="text" type="text" placeholder="Пример: 1203, Бензин, Амоняк" autofocus>
+        <button id="clearTextSubstance" class="clearTextBtn hidden" type="button" aria-label="Изчисти търсенето">×</button>
+        <div class="dropDown">
+        </div>
+    </div>
+
     <section class="homeInfo">
-        <h4>Как работи системата</h4>
-        <p>
-            Въведете най-малко 4 символа от наименование на вещество или UN код. От падащия списък изберете резултат,
-            за да видите класа на опасност, маркировките, кодовете на опасност, дистанциите при инцидент и приложимата инструкция.
-        </p>
-        <div class="homeInfoGrid">
-            <div class="homeInfoCard">
-                <h5>Бързи стъпки</h5>
-                <ol>
-                    <li>Въведете име (напр. „Бензин“) или UN код.</li>
-                    <li>Изберете съответното вещество от списъка.</li>
-                    <li>Прегледайте данните и следвайте показаната инструкция.</li>
-                </ol>
+        <div class="homeInfoSteps">
+            <div class="homeInfoStep">
+                <div class="homeInfoStepNum">1</div>
+                <div class="homeInfoStepText">Въведете поне 4 символа от наименованието или ООН код</div>
             </div>
-            <div class="homeInfoCard">
-                <h5>Примерни търсения</h5>
-                <ul>
-                    <li>UN 1203</li>
-                    <li>Пропан</li>
-                    <li>Амоняк</li>
-                </ul>
+            <div class="homeInfoStep">
+                <div class="homeInfoStepNum">2</div>
+                <div class="homeInfoStepText">Изберете вещество от падащия списък</div>
+            </div>
+            <div class="homeInfoStep">
+                <div class="homeInfoStepNum">3</div>
+                <div class="homeInfoStepText">Разгледайте данните и следвайте приложимата инструкция</div>
             </div>
         </div>
         <p class="homeInfoNote">
@@ -31,72 +34,82 @@
             официалните ADR документи и указанията на компетентните органи.
         </p>
     </section>
-    <div id="substanceCombo" class="dropDown_text">
-        <input id="textSubstance" class="text" type="text" placeholder="Пример: 1203, Бензин, Амоняк" autofocus>
-        <button id="clearTextSubstance" class="clearTextBtn hidden" type="button" aria-label="Изчисти търсенето">×</button>
-        <div class="dropDown">
+    <div class="substanceInfo hidden">
+        <div class="substanceLeft">
+            <div class="substanceAdrPlate hidden">
+                <div class="adrPlate" aria-label="ADR табела на избраното вещество">
+                    <div class="adrPlateTop" id="adrDangerCode"></div>
+                    <div class="adrPlateBottom" id="adrUnNumber"></div>
+                </div>
+            </div>
+            <div class="imagesContainer">
+                <div class="images">
+                </div>
+            </div>
+            <div class="dangerAnotations">
+                <div class="polimerization hidden"><span>Склонност към полимеризация</span></div>
+                <div class="reactsWithWater hidden"><span>Реагира с вода</span></div>
+                <div class="reactionProduct hidden"><span>Продукт на реакцията: </span><span class="name"></span></div>
+            </div>
         </div>
-    </div>
-    <div class="substanceAdrPlate hidden">
-        <div class="adrPlate" aria-label="ADR табела на избраното вещество">
-            <div class="adrPlateTop" id="adrDangerCode"></div>
-            <div class="adrPlateBottom" id="adrUnNumber"></div>
+        <div class="substanceRight">
+            <div class="nameBg">
+                <span id="nameBg"></span>
+            </div>
+            <div class="nameEn">
+                <span id="nameEn"></span>
+            </div>
+            <div class="unNumber hidden">
+                <span>Код по ООН:</span>
+                <span id="unNumber"></span>
+            </div>
+            <div class="hazardClass hidden">
+                <span>Клас:</span>
+                <span id="hazardClass"></span>
+            </div>
+            <div class="dangerNumber hidden">
+                <span>Код на опасност:</span>
+                <span id="dangerNumber"></span>
+            </div>
+            <div class="dangers hidden">
+                <span id="dangers"></span>
+            </div>
+            <div class="description hidden">
+                <span>Описание:</span>
+                <span id="description"></span>
+            </div>
         </div>
-    </div>
-    <div class="nameBg">
-        <span id="nameBg"></span>
-    </div>
-    <div class="nameEn">
-        <span id="nameEn"></span>
-    </div>
-    <div class="unNumber hidden">
-        <span>Код по ООН:</span>
-        <span id="unNumber"></span>
-    </div>
-    <div class="hazardClass hidden">
-        <span>Клас:</span>
-        <span id="hazardClass"></span>
-    </div>
-    <div class="dangerNumber hidden">
-        <span>Код на опасност:</span>
-        <span id="dangerNumber"></span>
-    </div>
-    <div class="dangers hidden">
-        <span id="dangers"></span>
-    </div>
-    <div class="imagesContainer">
-        <div class="images">            
-        </div>
-    </div>
-    <div class="description hidden">
-        <span>Описание:</span>
-        <span id="description"></span>
-    </div>
-    <div class="dangerAnotations">
-        <div class="polimerization hidden"><span>Склонност към полимеризация</span></div>
-        <div class="reactsWithWater hidden"><span>Реагира с вода</span></div>
-        <div class="reactionProduct hidden"><span>Продукт на реакцията: </span><span class="name"></span></div>
-    </div>
-    <div class="distances hidden">
-        <h4>Евакуация при инцидент с изтичане</h4>
-        <div class="distanceTable">
-            <div class="theader smallLeakHeader">Малък разлив (м)</div>
-            <div class="theader bigLeakHeader">Голям разлив (м)</div>
-            <div class="theader initialDistanceHeader">Първоначално</div>
-            <div class="theader dayDistanceHeader">Денем</div>
-            <div class="theader nightDistanceHeader">Нощем</div>            
-            <div class="smallLeak initialDistance"></div>
-            <div class="smallLeak dayDistance"></div>
-            <div class="smallLeak nightDistance"></div>
-            <div class="bigLeak initialDistance"></div>
-            <div class="bigLeak dayDistance"></div>
-            <div class="bigLeak nightDistance"></div>
+        <div class="distances hidden">
+            <h4>Евакуация при инцидент с изтичане</h4>
+            <div class="distanceTableWrap">
+            <div class="distanceTable">
+                <div class="theader smallLeakHeader">Малък разлив (м)</div>
+                <div class="theader bigLeakHeader">Голям разлив (м)</div>
+                <div class="theader initialDistanceHeader">Първоначално</div>
+                <div class="theader dayDistanceHeader">Денем</div>
+                <div class="theader nightDistanceHeader">Нощем</div>
+                <div class="smallLeak initialDistance"></div>
+                <div class="smallLeak dayDistance"></div>
+                <div class="smallLeak nightDistance"></div>
+                <div class="bigLeak initialDistance"></div>
+                <div class="bigLeak dayDistance"></div>
+                <div class="bigLeak nightDistance"></div>
+            </div>
+            </div>
         </div>
     </div>
     <div class="instruction hidden">
-        <h3><span>ИНСТРУКЦУЯ: </span><span id="instructionNumber"></span></h3>
-        <h4 class="description" id="instructionDescription"></h4>
-        <%- include("./partials/content.ejs")  %>
+        <div class="instrSectionHeader">
+            <h2 class="instrSectionTitle">Инструкция № <span id="instructionNumber"></span></h2>
+            <a id="instrFullLink" href="#" class="instrViewFull">Пълна страница →</a>
+        </div>
+        <div class="instrDescCard">
+            <span class="instrDescLabel">Вид опасност</span>
+            <p class="instrDescText" id="instructionDescription"></p>
+        </div>
+        <div class="instrContentCard">
+            <%- include("./partials/content.ejs") %>
+        </div>
     </div>
 
 </div>
@@ -145,6 +158,18 @@
             if (event.key === "Escape") {
                 clearSearchInput();
                 event.preventDefault();
+            } else if (event.key === "ArrowDown") {
+                const firstItem = document.querySelector("#substanceCombo .dropDown .item");
+                if (firstItem) {
+                    firstItem.focus();
+                    event.preventDefault();
+                }
+            } else if (event.key === "Enter") {
+                const items = document.querySelectorAll("#substanceCombo .dropDown .item");
+                if (items.length === 1) {
+                    selectItem(items[0]);
+                    event.preventDefault();
+                }
             }
         };
 
@@ -169,6 +194,25 @@
                         item.setAttribute("tabindex", "0");
                         item.setAttribute("data-substance", btoa(encodeURI(JSON.stringify(element))));
                         item.setAttribute("onclick", "selectItem(this)");
+
+                        item.addEventListener("keydown", (e) => {
+                            const allItems = Array.from(document.querySelectorAll("#substanceCombo .dropDown .item"));
+                            const idx = allItems.indexOf(e.currentTarget);
+                            if (e.key === "ArrowDown") {
+                                if (idx < allItems.length - 1) allItems[idx + 1].focus();
+                                e.preventDefault();
+                            } else if (e.key === "ArrowUp") {
+                                if (idx === 0) elm.focus();
+                                else allItems[idx - 1].focus();
+                                e.preventDefault();
+                            } else if (e.key === "Enter" || e.key === " ") {
+                                selectItem(e.currentTarget);
+                                e.preventDefault();
+                            } else if (e.key === "Escape") {
+                                clearSearchInput();
+                                e.preventDefault();
+                            }
+                        });
 
                         const span1 = document.createElement("span");
                         span1.classList.add("bold");
@@ -236,13 +280,16 @@
         dropDownElement.classList.remove("open")
         dropDownElement.innerHTML = "";
 
+        document.querySelector(".substanceInfo").classList.remove("hidden");
+
         let instruction = await loadInstruction(substance.instruction); 
         let content = decodeHtml(decodeURIComponent(atob(instruction.content))); 
         
         if(instruction !== null && typeof instruction !== 'undefined') {
             document.querySelector(".instruction #content").innerHTML = content;
-            document.querySelector("#instructionDescription").innerHTML = instruction.description;
-            document.querySelector("#instructionNumber").innerHTML = instruction.number;
+            document.querySelector("#instructionDescription").textContent = instruction.description;
+            document.querySelector("#instructionNumber").textContent = instruction.number;
+            document.querySelector("#instrFullLink").href = `/instruction/${instruction._id}`;
             document.querySelector(".instruction").classList.remove("hidden");
         } else {
             document.querySelector(".instruction #content").innerHTML = "";
@@ -257,8 +304,57 @@
         return txt.value;
     };
 
+    const reactionProductNames = {
+        'HCl':  'Хлороводород',
+        'H2S':  'Сероводород',
+        'SO2':  'Серен диоксид',
+        'PH3':  'Фосфин',
+        'NH3':  'Амоняк',
+        'HCN':  'Циановодород',
+        'HBr':  'Бромоводород',
+        'HF':   'Флуороводород',
+        'Br2':  'Бром',
+        'HI':   'Йодоводород',
+        'Hl':   'Йодоводород',
+        'NO2':  'Азотен диоксид',
+        'Cl2':  'Хлор',
+        'SO3':  'Серен триоксид',
+        'CO2':  'Въглероден диоксид',
+        'CO':   'Въглероден оксид',
+    };
+
+    const getReactionProductDisplay = (raw) => {
+        if (!raw) return '';
+        // Decode Excel richText JSON if needed
+        let formula = raw;
+        try {
+            const obj = JSON.parse(raw);
+            if (obj && obj.richText) {
+                formula = obj.richText.map(r => r.text).join('');
+            }
+        } catch (e) {
+            // plain string, use as-is
+        }
+        // Normalize Cyrillic look-alikes to Latin (Р→P, Н→H)
+        formula = formula.replace(/Р/g, 'P').replace(/Н/g, 'H');
+        // Strip trailing comma/whitespace
+        formula = formula.trim().replace(/,\s*$/, '');
+        // Split on ', ' and translate each compound
+        const parts = formula.split(',').map(p => p.trim()).filter(Boolean);
+        const html = parts.map(p => {
+            const name = reactionProductNames[p];
+            const sub = p.replace(/(\d+)/g, '<sub>$1</sub>');
+            return name ? `${name} (${sub})` : sub;
+        });
+        return html.join(', ');
+    };
+
     function clearLoadedSubstanceData() {
         selectedSubstance = null;
+
+        document.querySelector(".substanceInfo").classList.add("hidden");
+        const homeInfo = document.querySelector(".homeInfo");
+        if (homeInfo) homeInfo.classList.remove("hidden");
 
         document.querySelector("#nameBg").innerHTML = "";
         document.querySelector("#nameEn").innerHTML = "";
@@ -354,7 +450,7 @@
         typeof selectedSubstance.reactionProduct !== 'undefined') {
             document.querySelector(".reactsWithWater").classList.remove("hidden");
             document.querySelector(".reactionProduct").classList.remove("hidden");
-            document.querySelector(".reactionProduct .name").innerHTML = selectedSubstance.reactionProduct;
+            document.querySelector(".reactionProduct .name").innerHTML = getReactionProductDisplay(selectedSubstance.reactionProduct);
         } else {
             document.querySelector(".reactsWithWater").classList.add("hidden");
             document.querySelector(".reactionProduct").classList.add("hidden");

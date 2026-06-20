@@ -1,20 +1,52 @@
+<div class="dbPage">
 
-<div class="dashboardContainer">
-    <h2>Dashboard</h2>
-    <div>
-        <a href="/admin/instructions/add">Add New Instruction</a>
+    <div class="dbPageHeader">
+        <h2>Административно табло</h2>
+        <p>Управление на вещества, инструкции и настройки</p>
     </div>
 
-    <div>
-        <a href="/admin/instructions">List Instructions</a>
-    </div>
+    <div class="dbGrid">
 
-    <div>
-        <a href="/admin/substances">List Substances</a>
-    </div>
+        <a href="/admin/instructions/add" class="dbCard">
+            <div class="dbCardIcon">➕</div>
+            <div class="dbCardContent">
+                <div class="dbCardTitle">Добави инструкция</div>
+                <div class="dbCardDesc">Създаване на нова ADR инструкция</div>
+            </div>
+        </a>
 
-    <div>
-        <a href="/admin/data/export">Export data</a>
+        <a href="/admin/instructions" class="dbCard">
+            <div class="dbCardIcon">📋</div>
+            <div class="dbCardContent">
+                <div class="dbCardTitle">Списък инструкции</div>
+                <div class="dbCardDesc">Преглед и редакция на всички инструкции</div>
+            </div>
+        </a>
+
+        <a href="/admin/substances" class="dbCard">
+            <div class="dbCardIcon">🧪</div>
+            <div class="dbCardContent">
+                <div class="dbCardTitle">Списък вещества</div>
+                <div class="dbCardDesc">Преглед и редакция на всички вещества</div>
+            </div>
+        </a>
+
+        <a href="/admin/data/export" class="dbCard">
+            <div class="dbCardIcon">📤</div>
+            <div class="dbCardContent">
+                <div class="dbCardTitle">Експорт на данни</div>
+                <div class="dbCardDesc">Изтегляне в различни формати</div>
+            </div>
+        </a>
+
+        <a href="/admin/settings/plate-map" class="dbCard">
+            <div class="dbCardIcon">🪧</div>
+            <div class="dbCardContent">
+                <div class="dbCardTitle">Табели / Инструкции</div>
+                <div class="dbCardDesc">Редакция на връзката табела → инструкция</div>
+            </div>
+        </a>
+
     </div>
 
 </div>

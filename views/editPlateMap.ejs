@@ -1,0 +1,311 @@
+<div class="pmPage">
+
+    <div class="pmHeader">
+        <div>
+            <h2 class="pmTitle">Табели → Инструкции</h2>
+            <p class="pmSubtitle">Редакция на файл <code>plateInstructions.json</code></p>
+        </div>
+        <div class="pmHeaderActions">
+            <span id="pmStatus" class="pmStatus"></span>
+            <button id="pmSaveBtn" class="pmBtn pmBtnPrimary" onclick="saveAll()">Запази</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- Section 1: Single plate mappings                    -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section class="pmSection">
+        <h3 class="pmSectionTitle">Единични табели</h3>
+        <p class="pmSectionNote">Инструкция, показвана при избор на само тази табела.</p>
+        <table class="pmTable" id="singleTable">
+            <thead>
+                <tr>
+                    <th>Табела</th>
+                    <th>Изображение</th>
+                    <th>Инструкция №</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% plateFiles.forEach(file => { %>
+                    <tr data-plate="<%= file %>">
+                        <td class="pmPlateCell"><%= file %></td>
+                        <td><img src="/img/plates/<%= file %>" class="pmThumb" alt="<%= file %>"></td>
+                        <td>
+                            <select class="pmInput pmInstrInput">
+                                <option value="">— без —</option>
+                                <% instructions.forEach(i => { %>
+                                    <option value="<%= i.number %>" <%= (plateMap.singlePlate[file] || '') === i.number ? 'selected' : '' %>>
+                                        <%= i.number %> — <%= i.description %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- Section 2: Combinations                             -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section class="pmSection">
+        <div class="pmSectionHeader">
+            <div>
+                <h3 class="pmSectionTitle">Комбинации от табели</h3>
+                <p class="pmSectionNote">При избор на всички табели от комбинацията се показва посочената инструкция (по-специфичните правила имат предимство).</p>
+            </div>
+            <button class="pmBtn pmBtnSecondary" onclick="addCombination()">+ Добави</button>
+        </div>
+        <div id="combList">
+            <% (plateMap.combinations || []).forEach((combo, idx) => { %>
+                <div class="pmComboCard" data-idx="<%= idx %>">
+                    <div class="pmComboHeader">
+                        <span class="pmComboNum">#<%= idx + 1 %></span>
+                        <input type="text" class="pmInput pmComboComment" value="<%= combo.comment || '' %>" placeholder="Бележка (незадължително)">
+                        <button class="pmBtnDelete" onclick="deleteCombo(this)" title="Изтрий">×</button>
+                    </div>
+                    <div class="pmComboBody">
+                        <div class="pmComboPlates">
+                            <label class="pmLabel">Табели:</label>
+                            <div class="pmPlateChecks">
+                                <% plateFiles.forEach(file => { %>
+                                    <label class="pmCheckLabel <%= combo.plates.includes(file) ? 'checked' : '' %>">
+                                        <input type="checkbox"
+                                               class="pmPlateCheck"
+                                               value="<%= file %>"
+                                               <%= combo.plates.includes(file) ? 'checked' : '' %>
+                                               onchange="this.closest('label').classList.toggle('checked', this.checked)">
+                                        <img src="/img/plates/<%= file %>" class="pmThumbSm" alt="<%= file %>">
+                                        <span><%= file.replace('.png','') %></span>
+                                    </label>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <div class="pmComboInstr">
+                            <label class="pmLabel">Инструкция №:</label>
+                            <select class="pmInput pmComboInstrInput">
+                                <option value="">— избери —</option>
+                                <% instructions.forEach(i => { %>
+                                    <option value="<%= i.number %>" <%= (combo.instruction || '') === i.number ? 'selected' : '' %>>
+                                        <%= i.number %> — <%= i.description %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- Section 3: Instructions reference                   -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section class="pmSection pmRefSection">
+        <h3 class="pmSectionTitle">Справка — инструкции</h3>
+        <div class="pmRefGrid">
+            <% instructions.forEach(i => { %>
+                <div class="pmRefRow">
+                    <span class="pmRefNum"><%= i.number %></span>
+                    <span class="pmRefDesc"><%= i.description %></span>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+
+</div>
+
+<!-- ── Template for new empty combination ───────────────── -->
+<template id="comboTemplate">
+    <div class="pmComboCard">
+        <div class="pmComboHeader">
+            <span class="pmComboNum"></span>
+            <input type="text" class="pmInput pmComboComment" value="" placeholder="Бележка (незадължително)">
+            <button class="pmBtnDelete" onclick="deleteCombo(this)" title="Изтрий">×</button>
+        </div>
+        <div class="pmComboBody">
+            <div class="pmComboPlates">
+                <label class="pmLabel">Табели:</label>
+                <div class="pmPlateChecks">
+                    <% plateFiles.forEach(file => { %>
+                        <label class="pmCheckLabel">
+                            <input type="checkbox" class="pmPlateCheck" value="<%= file %>"
+                                   onchange="this.closest('label').classList.toggle('checked', this.checked)">
+                            <img src="/img/plates/<%= file %>" class="pmThumbSm" alt="<%= file %>">
+                            <span><%= file.replace('.png','') %></span>
+                        </label>
+                    <% }) %>
+                </div>
+            </div>
+            <div class="pmComboInstr">
+                <label class="pmLabel">Инструкция №:</label>
+                <select class="pmInput pmComboInstrInput">
+                    <option value="">— избери —</option>
+                    <% instructions.forEach(i => { %>
+                        <option value="<%= i.number %>"><%= i.number %> — <%= i.description %></option>
+                    <% }) %>
+                </select>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    function addCombination() {
+        const tmpl = document.getElementById('comboTemplate');
+        const clone = tmpl.content.cloneNode(true);
+        const list = document.getElementById('combList');
+        list.appendChild(clone);
+        renumberCombos();
+    }
+
+    function deleteCombo(btn) {
+        btn.closest('.pmComboCard').remove();
+        renumberCombos();
+    }
+
+    function renumberCombos() {
+        document.querySelectorAll('#combList .pmComboCard').forEach((card, i) => {
+            const num = card.querySelector('.pmComboNum');
+            if (num) num.textContent = '#' + (i + 1);
+        });
+    }
+
+    function collectData() {
+        // Single plate mappings
+        const singlePlate = {};
+        document.querySelectorAll('#singleTable tbody tr').forEach(row => {
+            const plate = row.dataset.plate;
+            const val = row.querySelector('.pmInstrInput').value.trim();
+            if (plate && val) singlePlate[plate] = val;
+        });
+
+        // Combinations
+        const combinations = [];
+        document.querySelectorAll('#combList .pmComboCard').forEach(card => {
+            const plates = Array.from(card.querySelectorAll('.pmPlateCheck:checked')).map(cb => cb.value);
+            const instruction = card.querySelector('.pmComboInstrInput').value.trim();
+            const comment = card.querySelector('.pmComboComment').value.trim();
+            if (plates.length >= 2 && instruction) {
+                const entry = { plates, instruction };
+                if (comment) entry.comment = comment;
+                combinations.push(entry);
+            }
+        });
+
+        // Rebuild instructions catalog from current JSON (unchanged)
+        return { singlePlate, combinations };
+    }
+
+    async function saveAll() {
+        const btn = document.getElementById('pmSaveBtn');
+        const status = document.getElementById('pmStatus');
+        btn.disabled = true;
+        status.textContent = 'Запазване...';
+        status.className = 'pmStatus';
+
+        try {
+            // Fetch current JSON to preserve the instructions catalog
+            const currentResp = await fetch('/modules/plateInstructions.json');
+            const current = await currentResp.json();
+
+            const partial = collectData();
+            const payload = {
+                instructions: current.instructions,
+                singlePlate: partial.singlePlate,
+                combinations: partial.combinations
+            };
+
+            const resp = await fetch('/admin/api/plate-map/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (resp.ok) {
+                status.textContent = '✓ Запазено успешно';
+                status.className = 'pmStatus pmStatusOk';
+            } else {
+                const err = await resp.json();
+                status.textContent = '✗ Грешка: ' + (err.error || resp.status);
+                status.className = 'pmStatus pmStatusErr';
+            }
+        } catch (e) {
+            status.textContent = '✗ ' + e.message;
+            status.className = 'pmStatus pmStatusErr';
+        } finally {
+            btn.disabled = false;
+            setTimeout(() => { status.textContent = ''; status.className = 'pmStatus'; }, 4000);
+        }
+    }
+</script>
+
+<style>
+.pmPage { max-width: 1000px; margin: 0 auto; padding: 20px 18px 40px; }
+
+.pmHeader { display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 12px; margin-bottom: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 14px; }
+.pmTitle  { margin: 0 0 4px; font-size: 1.4rem; color: #2d2d2d; }
+.pmSubtitle { margin: 0; font-size: 0.85rem; color: #888; }
+.pmHeaderActions { display: flex; align-items: center; gap: 14px; }
+
+.pmStatus { font-size: 0.9rem; font-weight: 600; }
+.pmStatusOk  { color: #2a7a2a; }
+.pmStatusErr { color: #b00; }
+
+.pmSection { margin-bottom: 36px; }
+.pmSectionHeader { display: flex; justify-content: space-between; align-items: flex-start;
+                   flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.pmSectionTitle { margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; color: #333; }
+.pmSectionNote  { margin: 0; font-size: 0.82rem; color: #888; }
+
+.pmTable { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.pmTable th { background: #f0f0f0; padding: 8px 10px; text-align: left; font-size: 0.8rem;
+              text-transform: uppercase; letter-spacing: 0.04em; color: #555; border-bottom: 2px solid #ddd; }
+.pmTable td { padding: 6px 10px; border-bottom: 1px solid #efefef; vertical-align: middle; }
+.pmTable tr:hover td { background: #fafafa; }
+.pmPlateCell { font-size: 0.82rem; color: #555; }
+
+.pmThumb   { width: 40px; height: 40px; object-fit: contain; }
+.pmThumbSm { width: 24px; height: 24px; object-fit: contain; }
+
+.pmInput { padding: 6px 9px; border: 1px solid #d0d0d0; border-radius: 6px;
+           font-size: 0.9rem; outline: none; transition: border-color 0.15s; width: 100%; box-sizing: border-box; }
+.pmInput:focus { border-color: #c07a2a; }
+select.pmInput { cursor: pointer; background: #fff; }
+.pmInstrInput { max-width: 340px; }
+
+.pmBtn { padding: 8px 18px; border: none; border-radius: 7px; font-size: 0.9rem;
+         font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.pmBtnPrimary   { background: #c07a2a; color: #fff; }
+.pmBtnPrimary:hover { background: #a86520; }
+.pmBtnSecondary { background: #f0f0f0; color: #333; border: 1px solid #ccc; }
+.pmBtnSecondary:hover { background: #e4e4e4; }
+.pmBtnDelete { background: none; border: none; cursor: pointer; font-size: 1.2rem;
+               color: #b00; line-height: 1; padding: 0 4px; }
+.pmBtnDelete:hover { color: #800; }
+
+.pmComboCard { background: #fff; border: 1px solid #e2e2e2; border-radius: 9px;
+               padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.pmComboHeader { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.pmComboNum { font-weight: 700; color: #aaa; font-size: 0.82rem; min-width: 28px; }
+.pmComboComment { flex: 1; }
+.pmComboBody { display: grid; gap: 12px; }
+.pmComboInstr { display: flex; align-items: center; gap: 10px; }
+.pmLabel { font-size: 0.82rem; font-weight: 700; color: #555; white-space: nowrap; }
+
+.pmPlateChecks { display: flex; flex-wrap: wrap; gap: 6px; }
+.pmCheckLabel { display: inline-flex; align-items: center; gap: 5px;
+                border: 2px solid #e0e0e0; border-radius: 999px;
+                padding: 3px 8px 3px 4px; cursor: pointer; font-size: 0.78rem;
+                transition: border-color 0.12s, background 0.12s; user-select: none; }
+.pmCheckLabel.checked { border-color: #c07a2a; background: #fff5e8; }
+.pmCheckLabel input { display: none; }
+
+.pmRefSection { border-top: 1px solid #e8e8e8; padding-top: 20px; }
+.pmRefGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 16px; }
+.pmRefRow { display: flex; gap: 8px; padding: 4px 0; font-size: 0.82rem; border-bottom: 1px solid #f2f2f2; }
+.pmRefNum  { font-weight: 700; color: #c07a2a; min-width: 34px; }
+.pmRefDesc { color: #444; }
+</style>

@@ -1,27 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <title><%= typeof title !== 'undefined' ? title : 'Сборник инструкции за действие при инциденти с опасни товари' %></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/ckeditor/ckeditor5/ckeditor5.css">  
+    <link rel="stylesheet" href="/ckeditor/ckeditor5/ckeditor5.css">
+    <link rel="icon" type="image/png" href="/img/logo.png">  
 </head>
 <body>
-    <div class="header">
-        <h1>Сборник инструкции за действие при инциденти с опасни товари</h1>
-        <nav>
-            <span>Търси по: </span>
-            <a href="/">Наименование или ООН номер на в-во</a> |
-            <a href="/search/plate">Табели</a> |
-            <a href="/search/dangerNumber">Код на опасност</a>
-        </nav>
-    </div>
-    <div class="footer">
-        <p>&copy; 2026 Действие при инциденти с опасни товари</p>
-        <p><a href="/legal">Правна информация и отказ от отговорност</a></p>
-    </div>
-
+    <header class="siteHeader">
+        <div class="siteHeaderInner">
+            <div class="siteBrand">
+                <img src="/img/logo.png" class="siteBrandLogo" alt="ADR лого">
+                <div class="siteBrandText">
+                    <span class="siteBrandTitle">ADR</span>
+                    <span class="siteBrandSub">Опасни товари &mdash; Инструкции при инцидент</span>
+                </div>
+            </div>
+            <nav class="mainNav">
+                <a href="/" class="mainNavLink">🔍 По наименование / ООН</a>
+                <a href="/search/plate" class="mainNavLink">🪧 По табели</a>
+                <a href="/search/dangerNumber" class="mainNavLink">⚠ По код на опасност</a>
+                <a href="/admin" class="mainNavAdminLink">⚙</a>
+            </nav>
+        </div>
+    </header>
+    <footer class="siteFooter">
+        <p>&copy; 2026 Действие при инциденти с опасни товари &mdash; <a href="/legal">Правна информация</a></p>
+    </footer>
     <div class="main">
         <%- body %>
     </div>    

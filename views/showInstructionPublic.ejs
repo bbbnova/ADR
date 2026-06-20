@@ -1,13 +1,27 @@
 <div class="container instructionPublicPage">
-    <h3>Инструкция № <%= instruction.number %></h3>
-    <% if (instruction.title) { %>
-        <h4><%= instruction.title %></h4>
-    <% } %>
+
+    <div class="instrNav">
+        <a href="javascript:history.back()" class="instrBackLink">← Назад</a>
+    </div>
+
+    <div class="pageTitle">
+        <h2>Инструкция № <%= instruction.number %></h2>
+        <% if (instruction.title) { %>
+            <p><%= instruction.title %></p>
+        <% } %>
+    </div>
+
     <% if (instruction.description) { %>
-        <p class="instructionPublicDescription"><%= instruction.description %></p>
+        <div class="instrDescCard">
+            <span class="instrDescLabel">Вид опасност</span>
+            <p class="instrDescText"><%= instruction.description %></p>
+        </div>
     <% } %>
 
-    <%- include("./partials/content.ejs") %>
+    <div class="instrContentCard">
+        <%- include("./partials/content.ejs") %>
+    </div>
+
 </div>
 
 <script>

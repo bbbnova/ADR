@@ -1,134 +1,259 @@
-body {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    overflow: hidden;
+/* ── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-    font-family: Arial, sans-serif;
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e3e3e3;
-    height: 100vh;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.header, .footer {
-    background: #ce8e8e;
-    color: #470000;
-    padding: 10px 0;
+a { color: inherit; text-decoration: none; }
+
+/* ── Admin Header ─────────────────────────────────────── */
+.adminHeader {
+    background: #1e2533;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.adminHeaderInner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 56px;
+}
+
+.adminBrand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    white-space: nowrap;
+}
+
+.adminBrandLogo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.adminBrandSub {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: #a0aec0;
+    margin-left: 4px;
+}
+
+.adminNav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.adminNavLink {
+    color: #cbd5e0;
+    padding: 6px 11px;
+    border-radius: 6px;
+    font-size: 0.87rem;
+    transition: background 0.15s, color 0.15s;
+}
+
+.adminNavLink:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.adminNavLogout {
+    color: #fc8181;
+    border: 1px solid rgba(252,129,129,0.3);
+    margin-left: 6px;
+}
+
+.adminNavLogout:hover {
+    background: rgba(252,129,129,0.12);
+    color: #fc8181;
+}
+
+/* ── Admin Main ───────────────────────────────────────── */
+.adminMain {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 24px;
+}
+
+/* ── Admin Footer ─────────────────────────────────────── */
+.adminFooter {
+    background: #1e2533;
+    color: #718096;
     text-align: center;
+    font-size: 0.82rem;
+    padding: 12px 24px;
 }
 
-.header {
-    grid-row: 1;
+.adminFooter p { margin: 0; }
+.adminFooter a { color: #a0aec0; }
+.adminFooter a:hover { color: #fff; }
+
+/* ── Dashboard ────────────────────────────────────────── */
+.dbPage {
+    max-width: 960px;
+    margin: 0 auto;
 }
 
-.header a, .header a:visited {
-    color: #470000;
-    text-decoration: none;
+.dbPageHeader {
+    margin-bottom: 28px;
 }
 
-.header a:hover {
-    color: #fff1f1;
+.dbPageHeader h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.6rem;
+    color: #1e2533;
+    font-weight: 700;
 }
 
-.footer {
-    grid-row: 3;
+.dbPageHeader p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.95rem;
 }
 
-.main {
-    grid-row: 2;
-    overflow-y: scroll;
+.dbGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
 }
 
-h1 {
-    margin: 0 0 5px 0;
-}
-
-.dashboardContainer {
-    display: inline-block;
+.dbCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
     padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s, transform 0.15s, border-color 0.15s;
+    cursor: pointer;
 }
 
-.dashboardContainer > div {
-    margin-bottom: 5px;
-    padding: 5px;
-    font-size: 14pt;
+.dbCard:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+    border-color: #e6994c;
 }
 
-.dashboardContainer div {
-    pointer-events: none;
+.dbCardIcon {
+    font-size: 1.8rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff8f0;
+    border-radius: 10px;
 }
 
-.dashboardContainer a, .dashboardContainer a:visited {
-    text-decoration: none;
-    color: #470000;
-    pointer-events: auto;
+.dbCardTitle {
+    font-weight: 600;
+    color: #1e2533;
+    font-size: 0.96rem;
+    margin-bottom: 3px;
 }
 
-
-
-.dashboardContainer div:hover {
-    background-color: #470000;
+.dbCardDesc {
+    font-size: 0.82rem;
+    color: #718096;
+    line-height: 1.35;
 }
 
-.dashboardContainer a:hover {
-    /* background-color: #470000; */
-    color: #ffffff;
-}
-
+/* ── Cards (instructions / substances grid) ───────────── */
 .gridContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    gap: 16px;
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .instructionCard {
-    background: #ffebcd;
-    border: 1px solid #ffc46c;
-    border-radius: 5px;
-    padding: 15px;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border: 1px solid #fde8c6;
+    border-left: 4px solid #e6994c;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: box-shadow 0.15s;
+}
+
+.instructionCard:hover {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 .substanceCard {
-    background: rgb(228, 228, 228);
-    border: 0px solid rgb(145, 145, 145);
-    border-radius: 5px;
-    padding: 15px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #718096;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: box-shadow 0.15s;
+}
+
+.substanceCard:hover {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 .substanceCard p {
-    padding: 0 10px;
-    margin: 5px 5px;
+    padding: 0 6px;
+    margin: 4px 0;
     word-break: break-all;
 }
 
 .substanceCard .reactsWithWater {
-    color: white;
-    padding: 10px;
-    background-color: rgb(178, 65, 65);
+    color: #fff;
+    padding: 6px 10px;
+    background: #b24141;
+    border-radius: 4px;
 }
 
 .substanceCard .polimerization {
-    color: white;
-    padding: 10px;
-    background-color: rgb(0, 8, 162);
+    color: #fff;
+    padding: 6px 10px;
+    background: #0008a2;
+    border-radius: 4px;
 }
 
 .substanceCard .isToxic {
-    color: white;
-    padding: 10px;
-    background-color: rgb(54, 54, 54);
+    color: #fff;
+    padding: 6px 10px;
+    background: #363636;
+    border-radius: 4px;
 }
 
-.image img{
+.image img {
     display: inline;
     width: 100px;
     height: 100px;
 }
 
-/* editing fields */
+/* ── Form / editing fields ────────────────────────────── */
 .container { max-width: 800px; margin: 20px auto; }
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 5px; font-weight: bold; }
@@ -136,9 +261,8 @@ input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
 #editor { height: 300px; }
 button { padding: 10px 20px; background: #0366d6; color: white; border: none; cursor: pointer; }
 button:hover { background: #0256c7; }
-.editor-container, #content { max-width: 800px; margin-left: auto; margin-right: auto; padding: 5px;}
- 
+.editor-container, #content { max-width: 800px; margin-left: auto; margin-right: auto; padding: 5px; }
 
-.hidden {
-    display: none;
-}
+h1 { margin: 0 0 5px 0; }
+
+.hidden { display: none; }

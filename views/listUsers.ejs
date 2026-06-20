@@ -1,0 +1,249 @@
+<div class="usersPage">
+
+    <div class="dbPageHeader">
+        <h2>Управление на потребители</h2>
+        <p>Създаване на нови потребители и промяна на пароли</p>
+    </div>
+
+    <!-- Create new user -->
+    <div class="userCreateCard">
+        <h3 class="userSectionTitle">Нов потребител</h3>
+        <form id="createUserForm">
+            <div class="userFormRow">
+                <div class="userFormGroup">
+                    <label for="newUserName">Потребителско име</label>
+                    <input type="text" id="newUserName" autocomplete="off" placeholder="потребителско_име">
+                </div>
+                <div class="userFormGroup">
+                    <label for="newUserPassword">Парола <span class="userFormHint">(мин. 6 символа)</span></label>
+                    <input type="password" id="newUserPassword" autocomplete="new-password" placeholder="••••••">
+                </div>
+                <div class="userFormGroup" style="max-width:140px">
+                    <label for="newUserRole">Роля</label>
+                    <select id="newUserRole">
+                        <option value="viewer">Viewer</option>
+                        <option value="editor">Editor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="userFormGroupBtn">
+                    <button type="submit" class="userBtn userBtnPrimary">Добави</button>
+                </div>
+            </div>
+            <div id="createUserMsg" class="userMsg hidden"></div>
+        </form>
+    </div>
+
+    <!-- Users list -->
+    <div class="userListSection">
+        <h3 class="userSectionTitle">Съществуващи потребители</h3>
+
+        <% if (users && users.length > 0) { %>
+            <% users.forEach(u => { %>
+                <div class="userCard" id="userCard_<%= u._id %>">
+                    <div class="userCardMain">
+                        <div class="userCardInfo">
+                            <span class="userCardName"><%= u.name %></span>
+                            <span class="userRoleBadge userRole_<%= u.role %>"><%= u.role %></span>
+                            <span class="userStatusBadge <%= u.isEnabled ? 'userStatusOn' : 'userStatusOff' %>">
+                                <%= u.isEnabled ? 'активен' : 'неактивен' %>
+                            </span>
+                        </div>
+                        <div class="userCardActions">
+                            <button class="userBtn userBtnSm" onclick="togglePasswordForm('<%= u._id %>')">Смени парола</button>
+                            <button class="userBtn userBtnSm <%= u.isEnabled ? 'userBtnDanger' : 'userBtnSuccess' %>"
+                                    onclick="toggleEnabled('<%= u._id %>', this)">
+                                <%= u.isEnabled ? 'Деактивирай' : 'Активирай' %>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="userPasswordForm hidden" id="pwForm_<%= u._id %>">
+                        <div class="userFormRow">
+                            <div class="userFormGroup">
+                                <label>Нова парола <span class="userFormHint">(мин. 6 символа)</span></label>
+                                <input type="password" id="pw_<%= u._id %>" autocomplete="new-password" placeholder="••••••">
+                            </div>
+                            <div class="userFormGroupBtn">
+                                <button class="userBtn userBtnPrimary" onclick="changePassword('<%= u._id %>')">Запази</button>
+                                <button class="userBtn userBtnSecondary" onclick="togglePasswordForm('<%= u._id %>')">Откажи</button>
+                            </div>
+                        </div>
+                        <div id="pwMsg_<%= u._id %>" class="userMsg hidden"></div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="userEmpty">Няма намерени потребители.</p>
+        <% } %>
+
+        <div id="userListLive"></div>
+    </div>
+
+</div>
+
+<script>
+    function togglePasswordForm(userId) {
+        const form = document.getElementById('pwForm_' + userId);
+        form.classList.toggle('hidden');
+        if (!form.classList.contains('hidden')) {
+            document.getElementById('pw_' + userId).focus();
+        }
+    }
+
+    async function changePassword(userId) {
+        const pw = document.getElementById('pw_' + userId).value;
+        const msg = document.getElementById('pwMsg_' + userId);
+        if (!pw || pw.length < 6) {
+            showMsg(msg, 'Паролата трябва да е поне 6 символа.', false);
+            return;
+        }
+        try {
+            const resp = await fetch(`/admin/api/users/password/${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pw })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                showMsg(msg, 'Паролата е сменена успешно.', true);
+                document.getElementById('pw_' + userId).value = '';
+            } else {
+                showMsg(msg, data.error || 'Грешка.', false);
+            }
+        } catch (e) {
+            showMsg(msg, 'Мрежова грешка.', false);
+        }
+    }
+
+    async function toggleEnabled(userId, btn) {
+        try {
+            const resp = await fetch(`/admin/api/users/toggle/${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                const badge = document.querySelector(`#userCard_${userId} .userStatusBadge`);
+                badge.textContent = data.isEnabled ? 'активен' : 'неактивен';
+                badge.className = 'userStatusBadge ' + (data.isEnabled ? 'userStatusOn' : 'userStatusOff');
+                btn.textContent = data.isEnabled ? 'Деактивирай' : 'Активирай';
+                btn.className = 'userBtn userBtnSm ' + (data.isEnabled ? 'userBtnDanger' : 'userBtnSuccess');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('newUserName').value.trim();
+        const password = document.getElementById('newUserPassword').value;
+        const role = document.getElementById('newUserRole').value;
+        const msg = document.getElementById('createUserMsg');
+
+        if (!name || !password || password.length < 6) {
+            showMsg(msg, 'Попълнете всички полета. Паролата трябва да е поне 6 символа.', false);
+            return;
+        }
+
+        try {
+            const resp = await fetch('/admin/api/users/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, password, role })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                showMsg(msg, `Потребителят "${data.name}" е създаден успешно.`, true);
+                document.getElementById('newUserName').value = '';
+                document.getElementById('newUserPassword').value = '';
+                appendUserCard(data);
+            } else {
+                showMsg(msg, data.error || 'Грешка при създаване.', false);
+            }
+        } catch (e) {
+            showMsg(msg, 'Мрежова грешка.', false);
+        }
+    });
+
+    function appendUserCard(user) {
+        const container = document.getElementById('userListLive');
+        const div = document.createElement('div');
+        div.className = 'userCard';
+        div.id = 'userCard_' + user.id;
+        div.innerHTML = `
+            <div class="userCardMain">
+                <div class="userCardInfo">
+                    <span class="userCardName">${user.name}</span>
+                    <span class="userRoleBadge userRole_${user.role}">${user.role}</span>
+                    <span class="userStatusBadge userStatusOn">активен</span>
+                </div>
+                <div class="userCardActions">
+                    <button class="userBtn userBtnSm" onclick="togglePasswordForm('${user.id}')">Смени парола</button>
+                    <button class="userBtn userBtnSm userBtnDanger" onclick="toggleEnabled('${user.id}', this)">Деактивирай</button>
+                </div>
+            </div>
+            <div class="userPasswordForm hidden" id="pwForm_${user.id}">
+                <div class="userFormRow">
+                    <div class="userFormGroup">
+                        <label>Нова парола <span class="userFormHint">(мин. 6 символа)</span></label>
+                        <input type="password" id="pw_${user.id}" autocomplete="new-password" placeholder="••••••">
+                    </div>
+                    <div class="userFormGroupBtn">
+                        <button class="userBtn userBtnPrimary" onclick="changePassword('${user.id}')">Запази</button>
+                        <button class="userBtn userBtnSecondary" onclick="togglePasswordForm('${user.id}')">Откажи</button>
+                    </div>
+                </div>
+                <div id="pwMsg_${user.id}" class="userMsg hidden"></div>
+            </div>`;
+        container.appendChild(div);
+    }
+
+    function showMsg(el, text, success) {
+        el.textContent = text;
+        el.className = 'userMsg ' + (success ? 'userMsgOk' : 'userMsgErr');
+        el.classList.remove('hidden');
+        setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+</script>
+
+<style>
+    .usersPage { max-width: 860px; margin: 0 auto; }
+    .userSectionTitle { font-size: 0.8rem; font-weight: 700; color: #718096; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.06em; }
+    .userCreateCard { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px; margin-bottom: 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .userCard { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .userCardMain { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .userCardInfo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .userCardName { font-weight: 600; color: #1e2533; font-size: 0.97rem; }
+    .userRoleBadge { padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .userRole_admin  { background: #fee2e2; color: #991b1b; }
+    .userRole_editor { background: #fff3e0; color: #b45309; }
+    .userRole_viewer { background: #f1f5f9; color: #475569; }
+    .userStatusBadge { padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
+    .userStatusOn  { background: #dcfce7; color: #166534; }
+    .userStatusOff { background: #f1f5f9; color: #64748b; }
+    .userCardActions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .userPasswordForm { margin-top: 14px; padding-top: 14px; border-top: 1px solid #f0f0f0; }
+    .userFormRow { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+    .userFormGroup { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 160px; }
+    .userFormGroup label { font-size: 0.82rem; font-weight: 600; color: #374151; }
+    .userFormHint { font-weight: 400; color: #9ca3af; }
+    .userFormGroup input, .userFormGroup select { padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 7px; font-size: 0.92rem; outline: none; transition: border-color 0.15s, box-shadow 0.15s; background: #fff; }
+    .userFormGroup input:focus, .userFormGroup select:focus { border-color: #e6994c; box-shadow: 0 0 0 3px rgba(230,153,76,0.15); }
+    .userFormGroupBtn { display: flex; gap: 8px; align-items: flex-end; padding-bottom: 1px; }
+    .userBtn { padding: 8px 16px; border: none; border-radius: 7px; font-size: 0.87rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .userBtnPrimary   { background: #e6994c; color: #fff; }
+    .userBtnPrimary:hover { background: #c07a2a; }
+    .userBtnSecondary { background: #f1f5f9; color: #475569; }
+    .userBtnSecondary:hover { background: #e2e8f0; }
+    .userBtnSm { padding: 6px 12px; font-size: 0.82rem; background: #f1f5f9; color: #374151; }
+    .userBtnSm:hover { background: #e2e8f0; }
+    .userBtnDanger  { color: #991b1b !important; background: #fee2e2 !important; }
+    .userBtnDanger:hover  { background: #fecaca !important; }
+    .userBtnSuccess { color: #166534 !important; background: #dcfce7 !important; }
+    .userBtnSuccess:hover { background: #bbf7d0 !important; }
+    .userMsg { font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; margin-top: 8px; }
+    .userMsgOk  { background: #dcfce7; color: #166534; }
+    .userMsgErr { background: #fee2e2; color: #991b1b; }
+    .userEmpty { color: #718096; font-style: italic; }
+</style>

@@ -1,15 +1,15 @@
 <div class="container dangerCodesPage">
-    <h3>Кодове на опасност</h3>
-    <p class="dangerCodesIntro">
-        Показани са всички кодове на опасност, които реално присъстват в базата с вещества.
-        Използвайте полето за филтриране по код или по текст в обяснението.
-    </p>
 
-    <div class="dangerCodesFilter">
-        <label for="dangerCodeFilter">Филтър</label>
-        <div class="dangerCodesFilterInputWrap">
-            <input id="dangerCodeFilter" type="text" placeholder="Пример: 33, X88, токсично">
-            <button id="clearDangerCodeFilter" class="dangerCodesClearBtn hidden" type="button" aria-label="Изчисти филтъра">×</button>
+    <div class="pageTitle">
+        <h2>Кодове на опасност</h2>
+        <p>Всички кодове, присъстващи в базата с вещества — търсете по код или по описание</p>
+    </div>
+
+    <div class="dcFilterBox">
+        <div class="dcFilterInputWrap">
+            <span class="dcFilterIcon">🔍</span>
+            <input id="dangerCodeFilter" type="text" class="dcFilterInput" placeholder="Пример: 33, X88, токсично" autocomplete="off">
+            <button id="clearDangerCodeFilter" class="dcClearBtn hidden" type="button" aria-label="Изчисти филтъра">×</button>
         </div>
     </div>
 
@@ -55,26 +55,40 @@
         }
 
         const toggleClearButton = () => {
-            if (!clearFilterButton) {
-                return;
-            }
-
-            if (filterInput.value.trim().length > 0) {
-                clearFilterButton.classList.remove('hidden');
-            } else {
-                clearFilterButton.classList.add('hidden');
-            }
+            if (!clearFilterButton) return;
+            clearFilterButton.classList.toggle('hidden', filterInput.value.trim().length === 0);
         };
 
         const applyFilter = () => {
             const searchText = filterInput.value.trim().toLowerCase();
+
+            // Build character frequency map from typed input
+            const charFreq = {};
+            for (const ch of searchText) {
+                charFreq[ch] = (charFreq[ch] || 0) + 1;
+            }
+            const charEntries = Object.entries(charFreq);
+
+            // Count how many times ch appears in str
+            const countChar = (str, ch) => str.split(ch).length - 1;
 
             items.forEach((item) => {
                 const codeElement = item.querySelector('.dangerCodeNumber');
                 const descriptionElement = item.querySelector('.dangerCodeDescription');
                 const code = (codeElement ? codeElement.textContent : '').toLowerCase();
                 const description = (descriptionElement ? descriptionElement.textContent : '').toLowerCase();
-                const isMatch = code.includes(searchText) || description.includes(searchText);
+
+                let isMatch;
+                if (charEntries.length === 0) {
+                    isMatch = true;
+                } else {
+                    // Code matches if it contains each typed char AT LEAST as many times as typed
+                    // e.g. "33" requires two 3s; "3x" requires one 3 and one x
+                    const codeMatch = charEntries.every(([ch, count]) => countChar(code, ch) >= count);
+                    const descMatch = description.includes(searchText);
+                    isMatch = codeMatch || descMatch;
+                }
+
                 item.classList.toggle('hidden', !isMatch);
             });
 

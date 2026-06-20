@@ -2,6 +2,8 @@ const Instruction = require('../models/instructionModel');
 const Substance = require('../models/substanceModel');
 const User = require('../models/userModel');
 const secretModule = require('../secretModule');
+const fs = require('fs');
+const path = require('path');
 
 const loginUser = async (req, res) => {
     try {
@@ -192,10 +194,82 @@ module.exports = {
     loginUser,
     logoutUser,
     addUser,
+    createUser,
+    updateUserPassword,
+    toggleUserEnabled,
     getSubstanceByNameOrUnNumber,
     getInstructionById,
     addInstruction,
     updateInstructionById,
     updateSubstanceById,
-    deleteSubstance
+    deleteSubstance,
+    savePlateMap
+}
+
+function savePlateMap(req, res) {
+    try {
+        const data = req.body;
+        if (!data || !data.instructions || !data.singlePlate || !Array.isArray(data.combinations)) {
+            return res.status(400).json({ error: 'Invalid data structure' });
+        }
+        const filePath = path.join(__dirname, '../public/modules/plateInstructions.json');
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Could not save file: ' + error.message });
+    }
+}
+
+async function createUser(req, res) {
+    try {
+        const { name, password, role } = req.body;
+        if (!name || !name.trim() || !password || password.length < 6) {
+            return res.status(400).json({ error: 'Попълнете всички полета. Паролата трябва да е поне 6 символа.' });
+        }
+        const existing = await User.findOne({ name: name.trim() });
+        if (existing) {
+            return res.status(409).json({ error: 'Потребител с това име вече съществува.' });
+        }
+        const passwordHash = secretModule.getHash(password, 11);
+        const newUser = new User({
+            name: name.trim(),
+            passwordHash,
+            role: ['admin', 'editor', 'viewer'].includes(role) ? role : 'viewer',
+            isEnabled: true
+        });
+        await newUser.save();
+        res.json({ success: true, id: newUser._id, name: newUser.name, role: newUser.role });
+    } catch (error) {
+        res.status(500).json({ error: 'Server Error' });
+    }
+}
+
+async function updateUserPassword(req, res) {
+    try {
+        const { password } = req.body;
+        if (!password || password.length < 6) {
+            return res.status(400).json({ error: 'Паролата трябва да е поне 6 символа.' });
+        }
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ error: 'Потребителят не е намерен.' });
+        user.passwordHash = secretModule.getHash(password, 11);
+        user.modifiedAt = new Date();
+        await user.save();
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Server Error' });
+    }
+}
+
+async function toggleUserEnabled(req, res) {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ error: 'Потребителят не е намерен.' });
+        user.isEnabled = !user.isEnabled;
+        user.modifiedAt = new Date();
+        await user.save();
+        res.json({ success: true, isEnabled: user.isEnabled });
+    } catch (error) {
+        res.status(500).json({ error: 'Server Error' });
+    }
 }

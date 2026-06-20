@@ -1,21 +1,36 @@
-<div class="screen">
-    <div id="container" class="container">
-        <form id="form" class="login_form" action="/admin/users/login" method="POST">
-            <h3>Log In</h3>
-            <div>
-                <i><label for="email">Username</label></i>
-                <input id="name" name="name" type="text" autofocus>
+<div class="loginPage">
+    <div class="loginCard">
+
+        <div class="loginBrand">
+            <div class="adrPlate loginBrandPlate">
+                <div class="adrPlateTop">ADR</div>
+                <div class="adrPlateBottom">&#128274;</div>
             </div>
-            <div>
-                <i><label for="password">Password</label></i>
-                <input id="password" name="password" type="password">
+            <div class="loginBrandText">
+                <h1 class="loginTitle">Административен панел</h1>
+                <p class="loginSubtitle">Сборник инструкции за опасни товари</p>
+            </div>
+        </div>
+
+        <hr class="loginDivider">
+
+        <form class="loginForm" action="/admin/users/login" method="POST" autocomplete="on">
+            <div class="loginField">
+                <label for="name">Потребителско име</label>
+                <input id="name" name="name" type="text"
+                       autocomplete="username" autofocus
+                       placeholder="Въведете потребителско име">
+            </div>
+            <div class="loginField">
+                <label for="password">Парола</label>
+                <input id="password" name="password" type="password"
+                       autocomplete="current-password"
+                       placeholder="Въведете парола">
             </div>
             <input id="toUrl" type="hidden" name="requestedUrl" value="">
-
-            <button id="btnLogin" class="login_submit" type="submit" >
-                <span>Log In</span> 
-            </button>				
+            <button class="loginBtn" type="submit">Вход</button>
         </form>
+
     </div>
 </div>
 

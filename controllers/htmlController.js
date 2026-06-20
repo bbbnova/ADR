@@ -1,5 +1,6 @@
 const Instruction = require('../models/instructionModel');
 const Substance = require('../models/substanceModel');
+const User = require('../models/userModel');
 const ImageCodes = require('../modules/imageCodes');
 const { hazardCodes } = require('../modules/hazardCodes');
 
@@ -18,8 +19,8 @@ const getLoginPage = async (req, res) => {
     try {
         
         res.render('login', { 
-            title: 'Login', 
-            layout: 'layouts/main'
+            title: 'Вход', 
+            layout: 'layouts/loginLayout'
         });
     } catch (error) {
         res.sendStatus(500);
@@ -249,6 +250,29 @@ const getDashboardPage = async (req, res) => {
     }
 }
 
+const getPlateMapPage = async (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        const plateMapPath = path.join(__dirname, '../public/modules/plateInstructions.json');
+        const plateMap = JSON.parse(fs.readFileSync(plateMapPath, 'utf8'));
+        const plateFiles = fs.readdirSync(path.join(__dirname, '../public/img/plates/'))
+            .filter(f => f.match(/\.(png|jpg|jpeg|svg)$/i))
+            .sort();
+        const instructions = await Instruction.find({}, { number: 1, description: 1 })
+            .sort({ number: 1 }).lean();
+        res.render('editPlateMap', {
+            title: 'Редакция — табели/инструкции',
+            layout: 'layouts/admin',
+            plateMap,
+            plateFiles,
+            instructions
+        });
+    } catch (error) {
+        res.status(500).send('Server Error: ' + error.message);
+    }
+}
+
 const getDataPage = async (req, res) => {
     try {   
         const substances = await Substance.find({});
@@ -417,7 +441,9 @@ module.exports = {
     getPlatesPage,
     getPublicInstructionPage,
     getDashboardPage,
+    getPlateMapPage,
     getDataPage,
+    getUsersPage,
     getListInstructionsPage,
     getAddInstructionPage,
     getEditInstructionPage,
@@ -427,4 +453,13 @@ module.exports = {
     getEditSubstancePage,
     getShowSubstancePage,
     getDeleteSubstancePage
+}
+
+async function getUsersPage(req, res) {
+    try {
+        const users = await User.find({}).sort({ createdAt: 1 }).select('-passwordHash -salt');
+        res.render('listUsers', { users, title: 'Потребители', layout: 'layouts/admin' });
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
 }

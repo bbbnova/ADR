@@ -7,6 +7,9 @@ const authorize = require('../middleware/authorize');
 
 router.get('/', authorize.user, htmlController.getDashboardPage);
 
+router.get('/settings/plate-map', authorize.user, htmlController.getPlateMapPage);
+router.post('/api/plate-map/save', authorize.user, apiController.savePlateMap);
+
 router.get('/data/export', authorize.user, htmlController.getDataPage);
 
 router.get('/substances/', authorize.user, htmlController.getListSubstancePage);
@@ -28,6 +31,11 @@ router.post('/api/instructions/update', apiController.updateInstructionById);
 
 // router.post('/users/add', authorize.user, apiController.addUser);
 router.post('/users/login', apiController.loginUser);
+
+router.get('/users', authorize.user, htmlController.getUsersPage);
+router.post('/api/users/create', authorize.user, apiController.createUser);
+router.post('/api/users/password/:id', authorize.user, apiController.updateUserPassword);
+router.post('/api/users/toggle/:id', authorize.user, apiController.toggleUserEnabled);
 
 router.get('/excel/addInstructionStartup', excelController.addInstructionStartup);
 router.get('/excel/readSubstances', excelController.readSubstances);
