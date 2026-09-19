@@ -5,3 +5,8 @@ node_modules/
 token_password.txt
 secret_key.txt
 iv.txt
+*.gz
+*.archive
+*.pem
+*.key
+mongodb-tls/

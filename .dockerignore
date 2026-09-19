@@ -8,3 +8,9 @@ docker-compose.yml
 requests.rest
 token_password.txt
 secret_key.txt
+*.gz
+*.archive
+*.pem
+*.key
+mongodb-tls/
+mongod-secure.conf

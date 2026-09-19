@@ -100,10 +100,11 @@ SECRET_KEY=сменете_с_произволен_таен_низ
 
 ### 4. Зареждане на базата данни
 
-Базата данни се доставя като компресиран архив (`adr_04-04-2026.gz`), създаден с `mongodump --gzip --archive`.
+Поставете одобрен компресиран backup извън Git repository-то. Архивът трябва да
+е създаден с `mongodump --gzip --archive`.
 
 ```bash
-mongorestore --uri="mongodb://127.0.0.1:27017" --gzip --archive=adr_04-04-2026.gz
+mongorestore --uri="mongodb://127.0.0.1:27017" --gzip --archive=/secure/backups/adr_backup.gz
 ```
 
 ### 5. Стартиране (без PM2)
@@ -191,10 +192,11 @@ SECRET_KEY=сменете_с_произволен_таен_низ
 
 ### 4. Зареждане на базата данни
 
-Базата данни се доставя като компресиран архив (`adr_04-04-2026.gz`), създаден с `mongodump --gzip --archive`.
+Поставете одобрен компресиран backup извън Git repository-то. Архивът трябва да
+е създаден с `mongodump --gzip --archive`.
 
 ```powershell
-mongorestore --gzip --archive=adr_04-04-2026.gz
+mongorestore --gzip --archive=C:\secure\backups\adr_backup.gz
 ```
 
 > Уверете се, че `mongorestore` е в системния `PATH`. Инструментът се инсталира заедно с **MongoDB Database Tools** от [mongodb.com/try/download/database-tools](https://www.mongodb.com/try/download/database-tools).
@@ -230,6 +232,22 @@ New-NetFirewallRule -DisplayName "ADR App" -Direction Inbound -Protocol TCP -Loc
 ---
 
 ## Инсталация — Docker контейнер
+
+### Защитена MongoDB
+
+Production конфигурацията използва отделен `adr_app` потребител с права само
+`readWrite` върху базата `adr`. MongoDB не публикува порт 27017 към хоста и
+приема единствено TLS връзки във вътрешната Docker мрежа. Паролата и публичният
+CA сертификат се монтират read-only като Docker Compose secrets от:
+
+```text
+/home/vasil/.config/mongodb-auth/adr.password
+/home/vasil/.config/adr/mongodb-ca.crt
+```
+
+Приложението отказва да стартира в production режим, ако `DATABASE_URL` няма
+credentials или TLS. Database архиви, private keys и PEM файлове са изключени
+от Git и Docker build context.
 
 ### Предварителни изисквания
 
@@ -350,4 +368,3 @@ ADR/
 ISC © Vasil Vasilev
 
 Данните, производни от ERG, са собственост на съответните правителствени агенции (PHMSA, Transport Canada, SICT) и са предоставени за свободно ползване. Приложението само по себе си е лицензирано под ISC лиценз.
-

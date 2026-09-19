@@ -4,6 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config();
+require('./config/loadSecrets')();
 const cookieParser = require('cookie-parser');
 
 const homeRouter = require('./routers/homeRouter');
@@ -46,12 +47,26 @@ app.use((err, req, res, next) => {
     });
 });
 
-mongoose.connect(process.env.DATABASE_URL).then(() => {
+function getDatabaseUrl() {
+    const url = String(process.env.DATABASE_URL || '').trim();
+    if (!url) throw new Error('DATABASE_URL is required');
+
+    if (process.env.NODE_ENV === 'production') {
+        const hasCredentials = /^mongodb(?:\+srv)?:\/\/[^/@]+:[^/@]+@/.test(url);
+        const usesTls = url.startsWith('mongodb+srv://') || /[?&](?:tls|ssl)=true(?:&|$)/i.test(url);
+        if (!hasCredentials) throw new Error('Production MongoDB requires a dedicated username and password');
+        if (!usesTls) throw new Error('Production MongoDB requires TLS');
+    }
+    return url;
+}
+
+mongoose.connect(getDatabaseUrl()).then(() => {
     console.log('Database connected.');
     const PORT = process.env.PORT;
     app.listen(PORT, () => {
         console.log(`Server listening on http://localhost:${PORT}`);
     });
 }).catch((error) => {
-    console.log(error.message);
+    console.error('Database connection failed:', error.message);
+    process.exit(1);
 });

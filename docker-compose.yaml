@@ -3,11 +3,12 @@ services:
     mongo_db:
         container_name: mongodb
         image: mongo:8.0.4
-        ports:
-            - 27017:27017 # enable outside docker by removinh host IP
         restart: unless-stopped
+        command: ["mongod", "--config", "/etc/mongod.conf"]
         volumes: 
             - mongo_db:/data/db
+            - ./mongod-secure.conf:/etc/mongod.conf:ro
+            - /home/vasil/.config/mongodb-tls:/run/mongodb-tls:ro
         networks:
             - db_network
 
@@ -17,6 +18,8 @@ services:
         secrets:
             - token_password
             - secret_key
+            - mongodb_password
+            - mongodb_ca
         build: .
         restart: unless-stopped
         ports:
@@ -24,15 +27,19 @@ services:
         
         environment:
             PORT: 3001
-            DATABASE_URL: mongodb://mongo_db:27017/adr
             TOKEN_PASSWORD: /run/secrets/token_password
             SECRET_KEY: /run/secrets/secret_key
-            NODE_ENV: development
+            NODE_ENV: production
+        command:
+            - /bin/sh
+            - -c
+            - |
+                export DATABASE_URL="mongodb://adr_app:$$(tr -d '\n\r' < /run/secrets/mongodb_password)@mongo_db:27017/adr?authSource=adr&tls=true&tlsCAFile=/run/secrets/mongodb_ca"
+                exec pm2-runtime server.js --no-daemon --name adr
         # depends_on:
         #     - mongo_db   
         networks:
             - db_network
-
 volumes:
     mongo_db:
         driver: local
@@ -43,6 +50,10 @@ secrets:
         # external: true
     secret_key:
         file: ./secret_key.txt
+    mongodb_password:
+        file: /home/vasil/.config/mongodb-auth/adr.password
+    mongodb_ca:
+        file: /home/vasil/.config/adr/mongodb-ca.crt
         # external: true
 
 networks:
