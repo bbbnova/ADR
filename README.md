@@ -43,8 +43,8 @@ ERG е публикация на правителствени агенции и 
 
 ## Изисквания
 
-- **Node.js** v18 или по-нова версия
-- **MongoDB** v6 или по-нова версия
+- **Node.js** v22 LTS
+- **MongoDB** v8 (препоръчително)
 - **npm** v9 или по-нова версия
 
 ---
@@ -90,10 +90,10 @@ npm ci
 
 ```env
 PORT=3001
-DATABASE_URL=mongodb://127.0.0.1:27017/adr
+DATABASE_URL=mongodb://adr_app:URL_ENCODED_PASSWORD@127.0.0.1:27017/adr?authSource=adr&tls=true&tlsCAFile=/secure/mongodb-ca.crt
 NODE_ENV=production
-TOKEN_PASSWORD=сменете_с_произволен_таен_низ
-SECRET_KEY=сменете_с_произволен_таен_низ
+TOKEN_PASSWORD=минимум_32_случайни_символа
+SECRET_KEY=минимум_32_случайни_символа
 ```
 
 > Генерирайте сигурни стойности с: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
@@ -101,11 +101,8 @@ SECRET_KEY=сменете_с_произволен_таен_низ
 ### 4. Зареждане на базата данни
 
 Поставете одобрен компресиран backup извън Git repository-то. Архивът трябва да
-е създаден с `mongodump --gzip --archive`.
-
-```bash
-mongorestore --uri="mongodb://127.0.0.1:27017" --gzip --archive=/secure/backups/adr_backup.gz
-```
+е създаден с `mongodump --gzip --archive`. Използвайте authentication и TLS при
+restore; production процедурата е описана в Docker раздела по-долу.
 
 ### 5. Стартиране (без PM2)
 
@@ -179,10 +176,10 @@ npm ci
 
 ```env
 PORT=3001
-DATABASE_URL=mongodb://127.0.0.1:27017/adr
+DATABASE_URL=mongodb://adr_app:URL_ENCODED_PASSWORD@127.0.0.1:27017/adr?authSource=adr&tls=true&tlsCAFile=C:\secure\mongodb-ca.crt
 NODE_ENV=production
-TOKEN_PASSWORD=сменете_с_произволен_таен_низ
-SECRET_KEY=сменете_с_произволен_таен_низ
+TOKEN_PASSWORD=минимум_32_случайни_символа
+SECRET_KEY=минимум_32_случайни_символа
 ```
 
 > Генерирайте сигурни стойности в PowerShell:
@@ -193,11 +190,8 @@ SECRET_KEY=сменете_с_произволен_таен_низ
 ### 4. Зареждане на базата данни
 
 Поставете одобрен компресиран backup извън Git repository-то. Архивът трябва да
-е създаден с `mongodump --gzip --archive`.
-
-```powershell
-mongorestore --gzip --archive=C:\secure\backups\adr_backup.gz
-```
+е създаден с `mongodump --gzip --archive`. Използвайте authentication и TLS при
+restore; production процедурата е описана в Docker раздела по-долу.
 
 > Уверете се, че `mongorestore` е в системния `PATH`. Инструментът се инсталира заедно с **MongoDB Database Tools** от [mongodb.com/try/download/database-tools](https://www.mongodb.com/try/download/database-tools).
 
@@ -233,114 +227,111 @@ New-NetFirewallRule -DisplayName "ADR App" -Direction Inbound -Protocol TCP -Loc
 
 ## Инсталация — Docker контейнер
 
-### Защитена MongoDB
+Production Compose конфигурацията стартира приложението `adr` и споделения
+MongoDB контейнер `mongodb` в частната мрежа `db_network`. MongoDB не публикува
+порт `27017`, изисква TLS и authentication, а приложението използва отделния
+потребител `adr_app` с `readWrite` само за базата `adr`.
 
-Production конфигурацията използва отделен `adr_app` потребител с права само
-`readWrite` върху базата `adr`. MongoDB не публикува порт 27017 към хоста и
-приема единствено TLS връзки във вътрешната Docker мрежа. Паролата и публичният
-CA сертификат се монтират read-only като Docker Compose secrets от:
+### 1. Тайни и сертификати
+
+Compose очаква следните файлове:
 
 ```text
+./token_password.txt
+./secret_key.txt
 /home/vasil/.config/mongodb-auth/adr.password
 /home/vasil/.config/adr/mongodb-ca.crt
 ```
 
-Приложението отказва да стартира в production режим, ако `DATABASE_URL` няма
-credentials или TLS. Database архиви, private keys и PEM файлове са изключени
-от Git и Docker build context.
-
-### Предварителни изисквания
-
-- **Docker** v24 или по-нова версия
-- **Docker Compose** v2 или по-нова версия (включен в Docker Desktop)
-
-### 1. Клониране и конфигуриране
+Генерирайте application тайните и ограничете достъпа им:
 
 ```bash
-git clone https://github.com/bbbnova/ADR.git
-cd ADR
+openssl rand -hex 32 > token_password.txt
+openssl rand -hex 32 > secret_key.txt
+chmod 600 token_password.txt secret_key.txt
 ```
 
-Създайте файловете с тайни:
+MongoDB паролата и CA сертификатът се provision-ват отделно от repository-то.
+Всички тайни се монтират read-only; не ги добавяйте в Git или Docker image.
+MongoDB server certificate/private key се пазят отделно в
+`/home/vasil/.config/mongodb-tls` на production хоста.
 
-```bash
-echo "сменете_с_произволен_таен_низ" > token_password.txt
-echo "сменете_с_произволен_таен_низ" > secret_key.txt
-```
-
-> **Никога** не добавяйте `token_password.txt` и `secret_key.txt` към git. Уверете се, че са изброени в `.gitignore`.
-
-### 2. Настройка на `docker-compose.yaml`
-
-По подразбиране приложението очаква MongoDB на адрес `mongodb://mongo_db:27017/adr` (вътрешна мрежа). Ако MongoDB работи на отделен контейнер или сървър, актуализирайте `DATABASE_URL` в `docker-compose.yaml`.
-
-В текущия файл услугата `mongo_db` вече е включена.
-
-Ако искате външна MongoDB (извън този compose):
-- променете `DATABASE_URL` към външния адрес;
-- премахнете услугата `mongo_db`;
-- премахнете `depends_on` в услугата `adr`, ако е включен.
-
-Пример за конфигурация с локална MongoDB услуга:
-
-```yaml
-services:
-    mongo_db:
-        container_name: mongodb
-        image: mongo:8.0.4
-        ports:
-            - "27017:27017"
-        restart: unless-stopped
-        volumes:
-            - mongo_db:/data/db
-        networks:
-            - db_network
-```
-
-### 3. Изграждане и стартиране
+### 2. Стартиране и проверка
 
 ```bash
 docker compose up -d --build
+docker compose ps
+docker logs --tail 100 adr
+curl --fail http://127.0.0.1:4001/
 ```
 
-Приложението ще бъде достъпно на `http://localhost:4001`.
+Приложението е достъпно на `http://localhost:4001`. Production режимът вече е
+зададен в `docker-compose.yaml`; приложението отказва да стартира при MongoDB
+връзка без credentials или TLS.
 
-### 4. Зареждане на базата данни
+### 3. Резервно копие
 
-Базата данни се доставя като компресиран архив (`adr_04-04-2026.gz`), създаден с `mongodump --gzip --archive`.
-
-Възстановяване директно от хоста към MongoDB услугата:
+Изпълнете на production хоста:
 
 ```bash
-docker compose exec -T mongo_db mongorestore --gzip --archive < adr_04-04-2026.gz
+docker cp /home/vasil/.config/mongodb-auth/admin.password mongodb:/tmp/admin.password
+docker exec mongodb sh -c 'mongodump \
+  --host mongodb \
+  --ssl \
+  --sslCAFile /run/mongodb-tls/ca.crt \
+  --username energidio_admin \
+  --password "$(tr -d "\\r\\n" < /tmp/admin.password)" \
+  --authenticationDatabase admin \
+  --db adr \
+  --archive=/tmp/adr-backup.gz \
+  --gzip'
+docker cp mongodb:/tmp/adr-backup.gz ./adr-backup.gz
+docker exec mongodb rm -f /tmp/admin.password /tmp/adr-backup.gz
+chmod 600 ./adr-backup.gz
+gzip -t ./adr-backup.gz
 ```
 
-Алтернатива (по име на контейнер):
+Пазете backup архива извън Git, криптирано и с ограничен достъп.
+
+### 4. Възстановяване
+
+`--drop` заменя текущите колекции. Направете актуален backup преди restore и
+спрете приложението, за да няма записи по време на операцията.
 
 ```bash
-docker cp adr_04-04-2026.gz mongodb:/tmp/adr_04-04-2026.gz
-docker exec -it mongodb mongorestore --gzip --archive=/tmp/adr_04-04-2026.gz
+gzip -t ./adr-backup.gz
+docker cp ./adr-backup.gz mongodb:/tmp/adr-restore.gz
+docker cp /home/vasil/.config/mongodb-auth/admin.password mongodb:/tmp/admin.password
+docker stop adr
+docker exec mongodb sh -c 'mongorestore \
+  --host mongodb \
+  --ssl \
+  --sslCAFile /run/mongodb-tls/ca.crt \
+  --username energidio_admin \
+  --password "$(tr -d "\\r\\n" < /tmp/admin.password)" \
+  --authenticationDatabase admin \
+  --archive=/tmp/adr-restore.gz \
+  --gzip \
+  --drop \
+  --nsInclude="adr.*"'
+docker exec mongodb rm -f /tmp/admin.password /tmp/adr-restore.gz
+docker start adr
+docker logs --tail 100 adr
 ```
 
-### 5. Управление на контейнера
+### 5. Управление и сигурност
 
 ```bash
-# Преглед на логовете
 docker compose logs -f adr
-
-# Спиране
+docker compose restart adr
 docker compose down
-
-# Обновяване след промяна в кода
-docker compose up -d --build
 ```
 
-### 6. Продукционна настройка с Docker
-
-За продукционна среда се препоръчва:
-- Промяна на `NODE_ENV` на `production` в `docker-compose.yaml`.
-- Използване на обратен прокси (Nginx, Traefik) пред контейнера.
-- TLS/SSL сертификат (напр. Let's Encrypt чрез Certbot).
+- Не публикувайте MongoDB порт `27017`.
+- Използвайте MongoDB администратора само за backup, restore и поддръжка.
+- Използвайте HTTPS reverse proxy пред публичното приложение.
+- Ротирайте credentials при съмнение за компрометиране.
+- Инсталирайте редовно security updates и тествайте restore процедурата.
 
 ---
 
